@@ -3,6 +3,7 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "src/scene/Scene.h"
+#include "src/parser/FileMazeParser.h"
 
 void setupGlfw();
 
@@ -16,6 +17,8 @@ int main() {
     setupGlfw();
 
     auto window = createWindow(800, 600, "OpenGL Project");
+
+    MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     double lastTime = glfwGetTime();
     float deltaTime;
@@ -35,6 +38,9 @@ int main() {
         auto camera = Camera::getInstance();
 
         processInput(camera, window, deltaTime);
+
+        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         glm::mat4 viewMatrix = camera->getViewMatrix();
         glm::mat4 projectionMatrix = camera->getProjectionMatrix();
@@ -57,6 +63,7 @@ void setupGlfw() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+    glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, true);
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif

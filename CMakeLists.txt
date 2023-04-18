@@ -21,5 +21,5 @@ add_library(GLAD "glad.c" includes/KHR/khrplatform.h src/scene/mesh/texture/stb_
 set(LIBS ${LIBS} GLAD)
 
 include_directories(${CMAKE_SOURCE_DIR}/includes)
-add_executable(opengl_project main.cpp src/camera/Camera.cpp src/camera/Camera.h src/scene/model/shader/Shader.cpp src/scene/model/shader/Shader.h src/utils/FileUtils.cpp src/utils/FileUtils.h src/camera/Direction.h src/scene/Scene.cpp src/scene/Scene.h src/scene/model/Model.cpp src/scene/model/Model.h src/scene/mesh/texture/Texture.cpp src/scene/mesh/texture/Texture.h src/scene/mesh/Mesh.cpp src/scene/mesh/Mesh.h src/utils/Color.cpp src/utils/Color.h src/utils/Structs.h)
+add_executable(opengl_project main.cpp src/camera/Camera.cpp src/camera/Camera.h src/scene/model/shader/Shader.cpp src/scene/model/shader/Shader.h src/utils/FileUtils.cpp src/utils/FileUtils.h src/camera/Direction.h src/scene/Scene.cpp src/scene/Scene.h src/scene/model/Model.cpp src/scene/model/Model.h src/scene/mesh/texture/Texture.cpp src/scene/mesh/texture/Texture.h src/scene/mesh/Mesh.cpp src/scene/mesh/Mesh.h src/utils/Color.cpp src/utils/Color.h src/utils/Structs.h src/parser/MazeParser.cpp src/parser/MazeParser.h src/parser/FileMazeParser.cpp src/parser/FileMazeParser.h src/parser/PositionEnum.h)
 target_link_libraries(opengl_project ${LIBS})
