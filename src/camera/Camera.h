@@ -20,14 +20,20 @@ private:
     int width{};
     int height{};
 
+    bool is_jumping = false;
+    float jump_speed = 5.0f;
+
+    float gravity = 9.81f;
     float yaw;
     float pitch;
     float sensitivity;
     float fov;
     float speed;
+    float vertical_speed;
     void updateCameraVectors();
 
 public:
+    void physicsUpdate(float deltaTime);
     Camera(Camera &other) = delete;
     void operator=(const Camera &) = delete;
 
@@ -41,6 +47,8 @@ public:
     [[nodiscard]] glm::mat4 getProjectionMatrix() const;
 
     void setWindowDimensions(int width, int height);
+
+    void updateJump(float deltaTime);
 };
 
 #endif

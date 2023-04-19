@@ -34,8 +34,10 @@ int main() {
         //std::cout << "FPS: " << 1.0 / (currentTime - lastTime) << std::endl;
         lastTime = currentTime;
 
-        auto camera = Camera::getInstance();
 
+
+        auto camera = Camera::getInstance();
+        camera->physicsUpdate(deltaTime);
         processInput(camera, window, deltaTime);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

@@ -32,6 +32,10 @@ void Camera::processKeyboard(Direction direction, float deltaTime) {
             position += right * speed * deltaTime;
             break;
         case Direction::JUMP:
+            if (!is_jumping) {
+                vertical_speed = jump_speed;
+            }
+            is_jumping = true;
             break;
         case Direction::UP:
             position += worldUp * speed * deltaTime;
@@ -57,6 +61,9 @@ void Camera::processMouseMovement(float xoffset, float yoffset) {
 }
 
 void Camera::updateCameraVectors() {
+    if (is_jumping) {
+        updateJump(0.016f);
+    }
     glm::vec3 newFront = glm::vec3(
             cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
             sin(glm::radians(pitch)),
@@ -80,6 +87,12 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
     updateCameraVectors();
 }
 
+void Camera::physicsUpdate(float deltaTime) {
+    if (is_jumping) {
+        updateJump(deltaTime);
+    }
+}
+
 glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + front, up);
 }
@@ -96,4 +109,17 @@ glm::mat4 Camera::getProjectionMatrix() const {
 void Camera::setWindowDimensions(int width, int height) {
     this->width = width;
     this->height = height;
+}
+
+
+void Camera::updateJump(float deltaTime) {
+    if (is_jumping) {
+        position.y += vertical_speed * deltaTime;
+        vertical_speed -= gravity * deltaTime;
+
+        if (position.y <= 0.0f) {
+            position.y = 0.0f;
+            is_jumping = false;
+        }
+    }
 }
