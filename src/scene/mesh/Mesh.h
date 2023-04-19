@@ -8,14 +8,14 @@
 class Mesh {
 private:
     unsigned int VAO, VBO, EBO;
-    std::vector<Texture> textures;
+    std::vector<Texture *> textures;
 
     unsigned int nextVertexAttribute = 0;
     int instanceCount = 0;
     unsigned int indicesCount;
 
 public:
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const std::vector<Texture> &textures);
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const std::vector<Texture *> &textures);
     ~Mesh();
 
     /**

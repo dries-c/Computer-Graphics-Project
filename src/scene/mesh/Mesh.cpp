@@ -6,8 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,const std::vector<Texture> &textures) {
-    this->textures = textures;
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,const std::vector<Texture *> &textures) : textures(textures) {
     indicesCount = indices.size();
 
     glGenVertexArrays(1, &VAO);
@@ -27,6 +26,11 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
     glVertexAttribPointer(nextVertexAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void *) nullptr);
     nextVertexAttribute++;
 
+    // Normals attribute
+    glEnableVertexAttribArray(nextVertexAttribute);
+    glVertexAttribPointer(nextVertexAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, normal));
+    nextVertexAttribute++;
+
     // Vertex texture coords
     glEnableVertexAttribArray(nextVertexAttribute);
     glVertexAttribPointer(nextVertexAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, texCoords));
@@ -36,9 +40,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
 }
 
 void Mesh::render(Shader &shader) {
-    // loop over textures and bind them
     for (int i = 0; i < textures.size(); i++) {
-        textures[i].bind(shader, i);
+        textures[i]->bind(shader, i);
     }
 
     glBindVertexArray(VAO);

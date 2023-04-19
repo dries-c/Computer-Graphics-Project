@@ -11,7 +11,7 @@ private:
     std::vector<Mesh *> meshes;
     std::vector<glm::mat4> modelMatrices;
     Shader shader;
-    unsigned int buffer;
+    unsigned int buffer {};
 
 public:
     virtual ~Model();

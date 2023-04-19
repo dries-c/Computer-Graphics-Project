@@ -1,5 +1,7 @@
 #include "Scene.h"
 #include "../utils/FileUtils.h"
+#include "../utils/ModelLoader.h"
+#include "glm/ext/matrix_transform.hpp"
 #include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
@@ -13,8 +15,15 @@ void Scene::addObject(Model *object) {
 }
 
 Scene::Scene() {
+    ModelLoader* modelLoader = ModelLoader::getInstance();
+    std::vector<Mesh*> meshes = modelLoader->loadMeshes("objects/backpack/backpack.obj");
     Shader shader = Shader("shaders/wall.vs", "shaders/wall.fs");
 
+    glm::mat4 matrix = glm::mat4(1.0f);
+    auto* model = new Model(matrix, shader, meshes);
+    addObject(model);
+
+    /*
     std::vector<Vertex> vertices = {};
     bindToVector(vertices, glm::vec3(-1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 1.0f));
     bindToVector(vertices, glm::vec3(1.0f, -1.0f, 1.0f), glm::vec2(0.0f, 0.0f));
@@ -50,11 +59,17 @@ Scene::Scene() {
             Texture("textures/container.png")
     };
 
-    auto *model = new Model(glm::mat4(1.0f), shader, {
-            new Mesh(vertices, indices, textures)
-    });
+    std::vector<glm::mat4> modelMatrices = {
+            glm::mat4(1.0f),
+            glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 0.0f, 0.0f)),
+            glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 2.0f, 0.0f)),
+            glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 2.0f)),
+            glm::translate(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 2.0f)),
+    };
 
-    addObject(model);
+    auto *model = new Model(modelMatrices, shader, {
+            new Mesh(vertices, indices, textures)
+    }); */
 }
 
 Scene::~Scene() {

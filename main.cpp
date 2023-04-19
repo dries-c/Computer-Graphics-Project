@@ -10,8 +10,6 @@ void bindGlad();
 void processInput(Camera *camera, GLFWwindow *window, float deltaTime);
 GLFWwindow *createWindow(int width, int height, const char *title);
 
-
-
 int main() {
     setupGlfw();
 
@@ -28,10 +26,12 @@ int main() {
             glfwTerminate();
             return 0;
         }
-    //FPS
+
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
-        //std::cout << "FPS: " << 1.0 / (currentTime - lastTime) << std::endl;
+#ifdef __APPLE__
+        std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
+#endif
         lastTime = currentTime;
 
 
@@ -138,9 +138,6 @@ void processInput(Camera *camera, GLFWwindow *window, float deltaTime) {
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera->processKeyboard(RIGHT, deltaTime);
-    }
-    if (glfwGetKey(window, GLFW_KEY_SPACE)== GLFW_PRESS){
-        camera->processKeyboard(JUMP, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
         camera->processKeyboard(UP, deltaTime);
