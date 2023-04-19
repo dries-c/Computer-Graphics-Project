@@ -28,6 +28,12 @@ void Camera::processKeyboard(Direction direction, float deltaTime) {
         case Direction::RIGHT:
             position += right * speed * deltaTime;
             break;
+        case Direction::UP:
+            position += up * speed * deltaTime;
+            break;
+        case Direction::DOWN:
+            position -= up * speed * deltaTime;
+            break;
     }
 }
 

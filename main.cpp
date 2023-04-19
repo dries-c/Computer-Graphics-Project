@@ -6,11 +6,8 @@
 #include "src/parser/FileMazeParser.h"
 
 void setupGlfw();
-
 void bindGlad();
-
 void processInput(Camera *camera, GLFWwindow *window, float deltaTime);
-
 GLFWwindow *createWindow(int width, int height, const char *title);
 
 int main() {
@@ -29,10 +26,10 @@ int main() {
             glfwTerminate();
             return 0;
         }
-
+    //FPS
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
-        std::cout << "FPS: " << 1.0 / (currentTime - lastTime) << std::endl;
+        //std::cout << "FPS: " << 1.0 / (currentTime - lastTime) << std::endl;
         lastTime = currentTime;
 
         auto camera = Camera::getInstance();
@@ -46,9 +43,6 @@ int main() {
         glm::mat4 projectionMatrix = camera->getProjectionMatrix();
 
         scene.render(viewMatrix, projectionMatrix);
-
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -76,7 +70,7 @@ void setupGlfw() {
 void bindGlad() {
     if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress)) {
         std::cout << "Failed to initialize GLAD" << std::endl;
-        exit(-1);
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -140,5 +134,11 @@ void processInput(Camera *camera, GLFWwindow *window, float deltaTime) {
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
         camera->processKeyboard(RIGHT, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_SPACE)== GLFW_PRESS){
+        camera->processKeyboard(UP, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        camera->processKeyboard(DOWN, deltaTime);
     }
 }
