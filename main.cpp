@@ -112,8 +112,8 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset) {
         Camera::getInstance()->processMouseScroll((float) yoffset);
     });
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glEnable(GL_DEPTH_TEST);
 
     return window;
 }

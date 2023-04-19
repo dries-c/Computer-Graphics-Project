@@ -59,13 +59,14 @@ void Camera::updateCameraVectors() {
     );
 
     front = glm::normalize(newFront);
-    right = glm::normalize(glm::cross(front, up));
+    right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
 }
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
     this->position = position;
     this->up = up;
+    this->worldUp = up;
     this->yaw = yaw;
     this->pitch = pitch;
     this->sensitivity = 0.1f;
