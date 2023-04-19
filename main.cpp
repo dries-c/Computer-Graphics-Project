@@ -10,6 +10,8 @@ void bindGlad();
 void processInput(Camera *camera, GLFWwindow *window, float deltaTime);
 GLFWwindow *createWindow(int width, int height, const char *title);
 
+
+
 int main() {
     setupGlfw();
 
@@ -136,9 +138,12 @@ void processInput(Camera *camera, GLFWwindow *window, float deltaTime) {
         camera->processKeyboard(RIGHT, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE)== GLFW_PRESS){
-        camera->processKeyboard(UP, deltaTime);
+        camera->processKeyboard(JUMP, deltaTime);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
+        camera->processKeyboard(UP, deltaTime);
+    }
+    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
         camera->processKeyboard(DOWN, deltaTime);
     }
 }
