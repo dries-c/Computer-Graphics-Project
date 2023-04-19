@@ -2,6 +2,7 @@
 #define OPENGL_PROJECT_SCENE_H
 
 #include "model/Model.h"
+#include "skybox/Skybox.h"
 #include <vector>
 
 class Scene{
@@ -11,10 +12,13 @@ public:
     void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
 private:
     std::vector<Model* > objects;
+    Skybox* skybox;
     void addObject(Model* object);
-    void renderMaze();
+    void setupMaze();
 
     static void bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector, glm::vec2 texCoords);
+
+    void setupSkybox();
 };
 
 

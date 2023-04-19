@@ -33,7 +33,7 @@ Texture::Texture(const char *path, int sWrap, int tWrap, int minFilter, int magF
     stbi_image_free(data);
 }
 
-void Texture::bind(Shader shader, int textureUnit) const {
+void Texture::bind(Shader &shader, int textureUnit) const {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     shader.setInt("texture" + std::to_string(textureUnit + 1), textureUnit);
     glBindTexture(GL_TEXTURE_2D, ID);

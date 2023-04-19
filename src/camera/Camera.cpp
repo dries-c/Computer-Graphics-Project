@@ -18,12 +18,12 @@ Camera *Camera::getInstance(glm::vec3 position, glm::vec3 up, float yaw, float p
 void Camera::processKeyboard(Direction direction) {
     switch (direction) {
         case Direction::FORWARD:
-            velocity.x = front.x * SPEED;
-            velocity.z = front.z * SPEED;
+            velocity.x += front.x * SPEED;
+            velocity.z += front.z * SPEED;
             break;
         case Direction::BACKWARD:
-            velocity.x = -front.x * SPEED;
-            velocity.z = -front.z * SPEED;
+            velocity.x -= front.x * SPEED;
+            velocity.z -= front.z * SPEED;
             break;
         case Direction::LEFT:
             velocity -= right * SPEED;

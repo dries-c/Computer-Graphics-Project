@@ -9,6 +9,7 @@ void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
     for (Model *object: objects) {
         object->render(viewMatrix, projectionMatrix);
     }
+    skybox->render(viewMatrix, projectionMatrix);
 }
 
 void Scene::addObject(Model *object) {
@@ -16,15 +17,15 @@ void Scene::addObject(Model *object) {
 }
 
 Scene::Scene() {
-    renderMaze();
+    setupSkybox();
+    setupMaze();
 }
 
-void Scene::renderMaze() {
+void Scene::setupMaze() {
     ModelLoader* modelLoader = ModelLoader::getInstance();
 
     std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/cube.obj");
     std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
-    Shader shader = Shader("shaders/wall.vs", "shaders/wall.fs");
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     std::vector<glm::mat4> floorMatrices = {};
@@ -39,14 +40,16 @@ void Scene::renderMaze() {
         }
     }
 
-    addObject(new Model(wallMatrices, shader, wallMeshes));
-    addObject(new Model(floorMatrices, shader, floorMeshes));
+    addObject(new Model(wallMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), wallMeshes));
+    addObject(new Model(floorMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), floorMeshes));
 }
 
 Scene::~Scene() {
     for (Model *object: objects) {
         delete object;
     }
+
+    delete skybox;
 
     std::cout << "Scene destroyed" << std::endl;
 }
@@ -56,4 +59,15 @@ void Scene::bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector, glm::v
     vertex.position = vector;
     vertex.texCoords = texCoords;
     vertices.push_back(vertex);
+}
+
+void Scene::setupSkybox() {
+    skybox = new Skybox({
+        "right.jpg",
+        "left.jpg",
+        "top.jpg",
+        "bottom.jpg",
+        "front.jpg",
+        "back.jpg"
+    });
 }
