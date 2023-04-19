@@ -6,6 +6,11 @@
 #include "Direction.h"
 #include <string>
 
+#define GRAVITY 9.81f
+#define JUMP_SPEED 4.0f
+#define MIN_Y 0.0f
+#define SPEED 2.0f
+
 class Camera{
 protected:
     static Camera* instance;
@@ -16,21 +21,17 @@ private:
     glm::vec3 up{};
     glm::vec3 right{};
     glm::vec3 worldUp{};
+    glm::vec3 velocity{};
 
     int width{};
     int height{};
 
-    bool is_jumping = false;
-    float jump_speed = 4.0f;
-
-    float gravity = 9.81f;
     float yaw;
     float pitch;
     float sensitivity;
     float fov;
-    float speed;
-    float vertical_speed;
     void updateCameraVectors();
+    bool isOnGround() const;
 
 public:
     void physicsUpdate(float deltaTime);
@@ -41,14 +42,12 @@ public:
 
     void processMouseMovement(float xoffset, float yoffset);
     void processMouseScroll(float yoffset);
-    void processKeyboard(Direction direction, float deltaTime);
+    void processKeyboard(Direction direction);
     [[nodiscard]] std::string toString() const;
     [[nodiscard]] glm::mat4 getViewMatrix() const;
     [[nodiscard]] glm::mat4 getProjectionMatrix() const;
 
     void setWindowDimensions(int width, int height);
-
-    void updateJump(float deltaTime);
 };
 
 #endif

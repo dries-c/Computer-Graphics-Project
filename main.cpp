@@ -7,7 +7,7 @@
 
 void setupGlfw();
 void bindGlad();
-void processInput(Camera *camera, GLFWwindow *window, float deltaTime);
+void processInput(Camera *camera, GLFWwindow *window);
 GLFWwindow *createWindow(int width, int height, const char *title);
 
 int main() {
@@ -33,8 +33,8 @@ int main() {
         lastTime = currentTime;
 
         auto camera = Camera::getInstance();
+        processInput(camera, window);
         camera->physicsUpdate(deltaTime);
-        processInput(camera, window, deltaTime);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -118,30 +118,30 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
     return window;
 }
 
-void processInput(Camera *camera, GLFWwindow *window, float deltaTime) {
+void processInput(Camera *camera, GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        camera->processKeyboard(FORWARD, deltaTime);
+        camera->processKeyboard(FORWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        camera->processKeyboard(BACKWARD, deltaTime);
+        camera->processKeyboard(BACKWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        camera->processKeyboard(LEFT, deltaTime);
+        camera->processKeyboard(LEFT);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        camera->processKeyboard(RIGHT, deltaTime);
+        camera->processKeyboard(RIGHT);
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE)== GLFW_PRESS){
-        camera->processKeyboard(JUMP, deltaTime);
+        camera->processKeyboard(JUMP);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-        camera->processKeyboard(UP, deltaTime);
+        camera->processKeyboard(UP);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
-        camera->processKeyboard(DOWN, deltaTime);
+        camera->processKeyboard(DOWN);
     }
 }

@@ -15,33 +15,32 @@ Camera *Camera::getInstance(glm::vec3 position, glm::vec3 up, float yaw, float p
     return instance;
 }
 
-void Camera::processKeyboard(Direction direction, float deltaTime) {
+void Camera::processKeyboard(Direction direction) {
     switch (direction) {
         case Direction::FORWARD:
-            position.x += front.x * speed * deltaTime;
-            position.z += front.z * speed * deltaTime;
+            velocity.x = front.x * SPEED;
+            velocity.z = front.z * SPEED;
             break;
         case Direction::BACKWARD:
-            position.x -= front.x * speed * deltaTime;
-            position.z -= front.z * speed * deltaTime;
+            velocity.x = -front.x * SPEED;
+            velocity.z = -front.z * SPEED;
             break;
         case Direction::LEFT:
-            position -= right * speed * deltaTime;
+            velocity -= right * SPEED;
             break;
         case Direction::RIGHT:
-            position += right * speed * deltaTime;
+            velocity += right * SPEED;
             break;
         case Direction::JUMP:
-            if (!is_jumping) {
-                vertical_speed = jump_speed;
+            if(isOnGround()){
+                velocity.y = JUMP_SPEED;
             }
-            is_jumping = true;
             break;
         case Direction::UP:
-            position += worldUp * speed * deltaTime;
+            velocity += worldUp * SPEED;
             break;
         case Direction::DOWN:
-            position -= worldUp * speed * deltaTime;
+            velocity -= worldUp * SPEED;
             break;
     }
 }
@@ -80,14 +79,25 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) {
     this->pitch = pitch;
     this->sensitivity = 0.1f;
     this->fov = 45.0f;
-    this->speed = 1.0f;
     updateCameraVectors();
 }
 
 void Camera::physicsUpdate(float deltaTime) {
-    if (is_jumping) {
-        updateJump(deltaTime);
+    position += velocity * deltaTime;
+
+    if (isOnGround()) {
+        velocity.y = 0;
+        position.y = MIN_Y;
+    } else {
+        velocity.y -= GRAVITY * deltaTime;
     }
+
+    velocity.x = 0;
+    velocity.z = 0;
+}
+
+bool Camera::isOnGround() const {
+    return position.y <= MIN_Y;
 }
 
 glm::mat4 Camera::getViewMatrix() const {
@@ -106,18 +116,4 @@ glm::mat4 Camera::getProjectionMatrix() const {
 void Camera::setWindowDimensions(int width, int height) {
     this->width = width;
     this->height = height;
-}
-
-
-void Camera::updateJump(float deltaTime) {
-    if (is_jumping) {
-        position.y += vertical_speed * deltaTime;
-        vertical_speed -= gravity * deltaTime;
-        std::cout << "vertical speed: " << vertical_speed << std::endl;
-
-        if (position.y <= 0.0f) {
-            position.y = 0.0f;
-            is_jumping = false;
-            }
-    }
 }
