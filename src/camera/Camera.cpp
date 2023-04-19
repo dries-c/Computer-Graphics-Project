@@ -45,7 +45,7 @@ void Camera::processMouseMovement(float xoffset, float yoffset) {
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
-    yaw = std::clamp(yaw + xoffset, 0.0f, 360.0f);
+    yaw = fmod(yaw + xoffset, 360.0f);
     pitch = std::clamp(pitch + yoffset, -89.0f, 89.0f);
 
     updateCameraVectors();

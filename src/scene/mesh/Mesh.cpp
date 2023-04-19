@@ -28,8 +28,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
     nextVertexAttribute++;
 
     // Vertex texture coords
-    glEnableVertexAttribArray(nextVertexAttribute++);
-    glVertexAttribPointer(nextVertexAttribute++, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, texCoords));
+    glEnableVertexAttribArray(nextVertexAttribute);
+    glVertexAttribPointer(nextVertexAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, texCoords));
     nextVertexAttribute++;
 
     glBindVertexArray(0);
