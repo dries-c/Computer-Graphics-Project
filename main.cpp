@@ -15,8 +15,6 @@ int main() {
 
     auto window = createWindow(800, 600, "OpenGL Project");
 
-    MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
-
     double lastTime = glfwGetTime();
     float deltaTime;
     Scene scene = Scene();
@@ -33,8 +31,6 @@ int main() {
         std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
 #endif
         lastTime = currentTime;
-
-
 
         auto camera = Camera::getInstance();
         camera->physicsUpdate(deltaTime);

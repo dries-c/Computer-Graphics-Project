@@ -12,6 +12,7 @@ public:
 private:
     std::vector<Model* > objects;
     void addObject(Model* object);
+    void renderMaze();
 
     static void bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector, glm::vec2 texCoords);
 };
