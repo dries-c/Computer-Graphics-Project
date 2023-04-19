@@ -21,7 +21,7 @@ private:
     int height{};
 
     bool is_jumping = false;
-    float jump_speed = 5.0f;
+    float jump_speed = 4.0f;
 
     float gravity = 9.81f;
     float yaw;

@@ -61,9 +61,6 @@ void Camera::processMouseMovement(float xoffset, float yoffset) {
 }
 
 void Camera::updateCameraVectors() {
-    if (is_jumping) {
-        updateJump(0.016f);
-    }
     glm::vec3 newFront = glm::vec3(
             cos(glm::radians(yaw)) * cos(glm::radians(pitch)),
             sin(glm::radians(pitch)),
@@ -116,10 +113,11 @@ void Camera::updateJump(float deltaTime) {
     if (is_jumping) {
         position.y += vertical_speed * deltaTime;
         vertical_speed -= gravity * deltaTime;
+        std::cout << "vertical speed: " << vertical_speed << std::endl;
 
         if (position.y <= 0.0f) {
             position.y = 0.0f;
             is_jumping = false;
-        }
+            }
     }
 }
