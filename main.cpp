@@ -47,9 +47,6 @@ int main() {
 
         scene.render(viewMatrix, projectionMatrix);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
@@ -118,8 +115,8 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset) {
         Camera::getInstance()->processMouseScroll((float) yoffset);
     });
-
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glEnable(GL_DEPTH_TEST);
 
     return window;
 }

@@ -1,14 +1,15 @@
 #include "Scene.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "../utils/FileUtils.h"
+#include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
-    for (Model &object : objects) {
-        object.render(viewMatrix, projectionMatrix);
+    for (Model *object: objects) {
+        object->render(viewMatrix, projectionMatrix);
     }
 }
 
-void Scene::addObject(Model &object) {
+void Scene::addObject(Model *object) {
     objects.push_back(object);
 }
 
@@ -30,10 +31,19 @@ Scene::Scene() {
             Texture("textures/container.png")
     };
 
-    Mesh mesh = Mesh(vertices, indices, textures);
-    Model model = Model(glm::mat4(1.0f), shader, {mesh});
+    auto *model = new Model(glm::mat4(1.0f), shader, {
+            new Mesh(vertices, indices, textures)
+    });
 
     addObject(model);
+}
+
+Scene::~Scene() {
+    for (Model *object: objects) {
+        delete object;
+    }
+
+    std::cout << "Scene destroyed" << std::endl;
 }
 
 void Scene::bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector, glm::vec2 texCoords) {

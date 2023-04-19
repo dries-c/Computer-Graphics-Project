@@ -14,4 +14,4 @@ public:
 };
 
 
-#endif //OPENGL_PROJECT_MAZEPARSER_H
+#endif
