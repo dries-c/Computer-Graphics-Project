@@ -1,0 +1,11 @@
+/cmake-build-debug/
+CMakeLists.txt
+/.idea/
+/lib.
+lib/
+CMakeLists.txt
+lib/libglfw.3.dylib
+lib/libglfw3.a
+CMakeLists.txt
+lib/libglfw.3.dylib
+lib/libglfw3.a
