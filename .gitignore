@@ -4,3 +4,4 @@
 lib/
 /cmake-build-debug-visual-studio/
 /includes/
+CMakeLists.txt
