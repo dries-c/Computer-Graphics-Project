@@ -4,6 +4,7 @@
 #include "model/Model.h"
 #include "skybox/Skybox.h"
 #include <vector>
+#include "../utils/Structs.h"
 
 class Scene{
 public:
