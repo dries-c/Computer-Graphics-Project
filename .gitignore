@@ -2,3 +2,5 @@
 /.idea/
 /lib.
 lib/
+/cmake-build-debug-visual-studio/
+/includes/
