@@ -6,7 +6,7 @@
 ///
 /// Exposes double-precision floating point vector type with one component.
 ///
-/// Include <glm/ext/vector_double1.hpp> to bind the features of this extension.
+/// Include <glm/ext/vector_double1.hpp> to use the features of this extension.
 ///
 /// @see ext_vector_double1_precision extension.
 /// @see ext_vector_float1 extension.
@@ -16,7 +16,7 @@
 #include "../detail/type_vec1.hpp"
 
 #if GLM_MESSAGES == GLM_ENABLE && !defined(GLM_EXT_INCLUDED)
-#	pragma message("GLM: GLM_EXT_vector_double1 extension included")
+#	pragma message("GLM: GLM_EXT_vector_dvec1 extension included")
 #endif
 
 namespace glm

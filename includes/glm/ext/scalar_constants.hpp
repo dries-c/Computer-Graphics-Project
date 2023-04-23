@@ -6,7 +6,7 @@
 ///
 /// Provides a list of constants and precomputed useful values.
 ///
-/// Include <glm/ext/scalar_constants.hpp> to bind the features of this extension.
+/// Include <glm/ext/scalar_constants.hpp> to use the features of this extension.
 
 #pragma once
 
@@ -29,10 +29,6 @@ namespace glm
 	/// Return the pi constant for floating point types.
 	template<typename genType>
 	GLM_FUNC_DECL GLM_CONSTEXPR genType pi();
-
-	/// Return the value of cos(1 / 2) for floating point types.
-	template<typename genType>
-	GLM_FUNC_DECL GLM_CONSTEXPR genType cos_one_over_two();
 
 	/// @}
 } //namespace glm

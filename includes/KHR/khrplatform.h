@@ -7,7 +7,7 @@
 ** Permission is hereby granted, free of charge, to any person obtaining a
 ** copy of this software and/or associated documentation files (the
 ** "Materials"), to deal in the Materials without restriction, including
-** without limitation the rights to bind, copy, modify, merge, publish,
+** without limitation the rights to use, copy, modify, merge, publish,
 ** distribute, sublicense, and/or sell copies of the Materials, and to
 ** permit persons to whom the Materials are furnished to do so, subject to
 ** the following conditions:
@@ -71,7 +71,7 @@
  *    khronos_boolean_enum_t      enumerated boolean type. This should
  *      only be used as a base type when a client API's boolean type is
  *      an enum. Client APIs which use an integer or other type for
- *      booleans cannot bind this as the base type for their boolean.
+ *      booleans cannot use this as the base type for their boolean.
  *
  * Tokens defined in khrplatform.h:
  *
@@ -101,10 +101,9 @@
 #   define KHRONOS_APICALL __declspec(dllimport)
 #elif defined (__SYMBIAN32__)
 #   define KHRONOS_APICALL IMPORT_C
-#elif (defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__) >= 303) \
-       || (defined(__SUNPRO_C) && (__SUNPRO_C >= 0x590))
-/* KHRONOS_APIATTRIBUTES is not used by the client API headers yet */
-#   define KHRONOS_APICALL __attribute__((visibility("default")))
+#elif defined(__ANDROID__)
+#   include <sys/cdefs.h>
+#   define KHRONOS_APICALL __attribute__((visibility("default"))) __NDK_FPABI__
 #else
 #   define KHRONOS_APICALL
 #endif
@@ -116,7 +115,7 @@
  * name in the function prototype.
  */
 #if defined(_WIN32) && !defined(_WIN32_WCE) && !defined(__SCITECH_SNAP__)
-/* Win32 but not WinCE */
+    /* Win32 but not WinCE */
 #   define KHRONOS_APIENTRY __stdcall
 #else
 #   define KHRONOS_APIENTRY
@@ -229,7 +228,7 @@ typedef unsigned short int     khronos_uint16_t;
 /*
  * Types that differ between LLP64 and LP64 architectures - in LLP64,
  * pointers are 64 bits, but 'long' is still 32 bits. Win64 appears
- * to be the only LLP64 architecture in current bind.
+ * to be the only LLP64 architecture in current use.
  */
 #ifdef _WIN64
 typedef signed   long long int khronos_intptr_t;

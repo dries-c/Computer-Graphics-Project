@@ -6,7 +6,7 @@
 ///
 /// Exposes sized signed integer scalar types.
 ///
-/// Include <glm/ext/scalar_int_sized.hpp> to bind the features of this extension.
+/// Include <glm/ext/scalar_int_sized.hpp> to use the features of this extension.
 ///
 /// @see ext_scalar_uint_sized
 
@@ -26,9 +26,9 @@ namespace detail
 		typedef std::int16_t		int16;
 		typedef std::int32_t		int32;
 #	else
-		typedef signed char			int8;
-		typedef signed short		int16;
-		typedef signed int			int32;
+		typedef char				int8;
+		typedef short				int16;
+		typedef int					int32;
 #endif//
 
 	template<>
