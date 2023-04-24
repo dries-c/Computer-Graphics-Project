@@ -141,4 +141,7 @@ void processInput(Camera *camera, GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
         camera->processKeyboard(DOWN);
     }
+    if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
+        camera->processKeyboard(TOGGLE_FREECAM);
+    }
 }

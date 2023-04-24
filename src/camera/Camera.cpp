@@ -34,7 +34,7 @@ void Camera::processKeyboard(Direction direction) {
         case Direction::JUMP:
             if (freeCamera) {
                 position.y += FREE_CAM_SPEED;
-            } else if(isOnGround()){
+            } else if (isOnGround()) {
                 velocity.y = JUMP_SPEED;
             }
             break;
@@ -44,6 +44,9 @@ void Camera::processKeyboard(Direction direction) {
             } else {
                 velocity -= worldUp * SPEED;
             }
+            break;
+        case Direction::TOGGLE_FREECAM:
+            freeCamera = !freeCamera;
             break;
     }
 }
@@ -91,7 +94,7 @@ void Camera::physicsUpdate(float deltaTime) {
     if (isOnGround()) {
         velocity.y = 0;
         position.y = MIN_Y;
-    } else if(!freeCamera) {
+    } else if (!freeCamera) {
         velocity.y -= GRAVITY * deltaTime;
     }
 

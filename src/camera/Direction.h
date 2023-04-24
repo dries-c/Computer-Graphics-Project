@@ -7,7 +7,8 @@ enum Direction {
     LEFT,
     RIGHT,
     JUMP,
-    DOWN
+    DOWN,
+    TOGGLE_FREECAM
 };
 
 #endif
