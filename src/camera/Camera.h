@@ -4,13 +4,13 @@
 #include "glm/vec3.hpp"
 #include "glm/mat4x4.hpp"
 #include "Direction.h"
+#include "FreeCamControls.h"
 #include <string>
 
 #define GRAVITY 9.81f
 #define JUMP_SPEED 4.0f
 #define MIN_Y 0.0f
 #define SPEED 2.0f
-#define FREE_CAM_SPEED 0.01f
 
 class Camera{
 protected:
@@ -24,7 +24,9 @@ private:
     glm::vec3 worldUp{};
     glm::vec3 velocity{};
 
-    bool freeCamera = true;
+    bool freeCamera = false;
+    float FREE_CAM_SPEED = 2.0f;
+
 
     int width{};
     int height{};
@@ -46,6 +48,7 @@ public:
     void processMouseMovement(float xoffset, float yoffset);
     void processMouseScroll(float yoffset);
     void processKeyboard(Direction direction);
+    void processKeyboard(FreeCamControls direction);
     [[nodiscard]] std::string toString() const;
     [[nodiscard]] glm::mat4 getViewMatrix() const;
     [[nodiscard]] glm::mat4 getProjectionMatrix() const;

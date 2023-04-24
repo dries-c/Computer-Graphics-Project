@@ -144,4 +144,13 @@ void processInput(Camera *camera, GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
         camera->processKeyboard(TOGGLE_FREECAM);
     }
+    if (glfwGetKey(window, GLFW_KEY_KP_ADD) == GLFW_PRESS){
+        camera->processKeyboard(FASTER_FREECAM);
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_SUBTRACT) == GLFW_PRESS){
+        camera->processKeyboard(SLOWER_FREECAM);
+    }
+    if (glfwGetKey(window, GLFW_KEY_KP_0) == GLFW_PRESS){
+        camera->processKeyboard(RESET_SPEED_FREECAM);
+    }
 }

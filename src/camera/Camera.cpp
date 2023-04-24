@@ -18,35 +18,78 @@ Camera *Camera::getInstance(glm::vec3 position, glm::vec3 up, float yaw, float p
 void Camera::processKeyboard(Direction direction) {
     switch (direction) {
         case Direction::FORWARD:
-            velocity.x += front.x * SPEED;
-            velocity.z += front.z * SPEED;
+            if (freeCamera) {
+                velocity.z += front.z * (FREE_CAM_SPEED);
+                velocity.x += front.x * (FREE_CAM_SPEED);
+            } else {
+                velocity.z += front.z * SPEED;
+                velocity.x += front.x * SPEED;
+            }
             break;
         case Direction::BACKWARD:
-            velocity.x -= front.x * SPEED;
-            velocity.z -= front.z * SPEED;
+            if (freeCamera) {
+                velocity.z -= front.z * (FREE_CAM_SPEED);
+                velocity.x -= front.x * (FREE_CAM_SPEED);
+            } else {
+                velocity.z -= front.z * SPEED;
+                velocity.x -= front.x * SPEED;
+            }
             break;
         case Direction::LEFT:
-            velocity -= right * SPEED;
+            if (freeCamera) {
+                velocity -= right * (FREE_CAM_SPEED);
+            } else {
+                velocity -= right * SPEED;
+            }
             break;
         case Direction::RIGHT:
-            velocity += right * SPEED;
+            if (freeCamera) {
+                velocity += right * (FREE_CAM_SPEED);
+            } else {
+                velocity += right * SPEED;
+            }
+
             break;
         case Direction::JUMP:
             if (freeCamera) {
-                position.y += FREE_CAM_SPEED;
+                position.y += FREE_CAM_SPEED/500;
             } else if (isOnGround()) {
                 velocity.y = JUMP_SPEED;
             }
             break;
         case Direction::DOWN:
             if (freeCamera) {
-                position.y -= FREE_CAM_SPEED;
+                position.y -= FREE_CAM_SPEED/500;
             } else {
                 velocity -= worldUp * SPEED;
             }
             break;
-        case Direction::TOGGLE_FREECAM:
+
+    }
+}
+void Camera::processKeyboard(FreeCamControls control) {
+    switch (control) {
+        case FreeCamControls::TOGGLE_FREECAM:
             freeCamera = !freeCamera;
+            break;
+        case FreeCamControls::FASTER_FREECAM:
+            if (freeCamera) {
+                //Add speed to free camera
+                FREE_CAM_SPEED += 0.01f;
+            }
+            break;
+        case FreeCamControls::SLOWER_FREECAM:
+            if (freeCamera) {
+                //Subtract speed from free camera make sure it's at least 0.05
+                FREE_CAM_SPEED -= 0.01f;
+                FREE_CAM_SPEED = std::max(FREE_CAM_SPEED, 0.05f);
+            }
+            break;
+        case FreeCamControls::RESET_SPEED_FREECAM:
+            if (freeCamera) {
+                //Set speed to default
+                FREE_CAM_SPEED = 2.0f;
+            }
             break;
     }
 }
