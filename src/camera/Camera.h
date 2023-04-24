@@ -23,6 +23,8 @@ private:
     glm::vec3 worldUp{};
     glm::vec3 velocity{};
 
+    bool freeCamera = true;
+
     int width{};
     int height{};
 

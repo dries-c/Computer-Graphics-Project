@@ -88,7 +88,7 @@ void Camera::physicsUpdate(float deltaTime) {
     if (isOnGround()) {
         velocity.y = 0;
         position.y = MIN_Y;
-    } else {
+    } else if(!freeCamera) {
         velocity.y -= GRAVITY * deltaTime;
     }
 
