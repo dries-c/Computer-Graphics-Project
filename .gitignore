@@ -3,5 +3,6 @@
 /lib.
 lib/
 /cmake-build-debug-visual-studio/
-/includes/
+/includes
+/lib
 CMakeLists.txt

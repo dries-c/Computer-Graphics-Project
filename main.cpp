@@ -139,9 +139,6 @@ void processInput(Camera *camera, GLFWwindow *window) {
         camera->processKeyboard(JUMP);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-        camera->processKeyboard(UP);
-    }
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS){
         camera->processKeyboard(DOWN);
     }
 }

@@ -10,6 +10,7 @@
 #define JUMP_SPEED 4.0f
 #define MIN_Y 0.0f
 #define SPEED 2.0f
+#define FREE_CAM_SPEED 0.1f
 
 class Camera{
 protected:

@@ -32,15 +32,18 @@ void Camera::processKeyboard(Direction direction) {
             velocity += right * SPEED;
             break;
         case Direction::JUMP:
-            if(isOnGround()){
+            if (freeCamera) {
+                position.y += FREE_CAM_SPEED;
+            } else if(isOnGround()){
                 velocity.y = JUMP_SPEED;
             }
             break;
-        case Direction::UP:
-            velocity += worldUp * SPEED;
-            break;
         case Direction::DOWN:
-            velocity -= worldUp * SPEED;
+            if (freeCamera) {
+                position.y -= FREE_CAM_SPEED;
+            } else {
+                velocity -= worldUp * SPEED;
+            }
             break;
     }
 }

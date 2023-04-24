@@ -7,7 +7,6 @@ enum Direction {
     LEFT,
     RIGHT,
     JUMP,
-    UP,
     DOWN
 };
 

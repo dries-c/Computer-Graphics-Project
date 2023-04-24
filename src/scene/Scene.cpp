@@ -5,7 +5,6 @@
 #include "../parser/FileMazeParser.h"
 #include <iostream>
 
-
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
     for (Model *object: objects) {
         object->render(viewMatrix, projectionMatrix);
