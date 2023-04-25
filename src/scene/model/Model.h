@@ -5,6 +5,7 @@
 #include "glm/mat4x4.hpp"
 #include "shader/Shader.h"
 #include "../mesh/Mesh.h"
+#include "../../camera/Camera.h"
 
 class Model {
 private:
@@ -15,6 +16,7 @@ private:
 
 public:
     virtual ~Model();
+    bool checkCollision(Entity &entity);
     Model(glm::mat4 modelMatrices, Shader *shader, const std::vector<Mesh*> &meshes);
     Model(const std::vector<glm::mat4>& modelMatrices, Shader *shader, const std::vector<Mesh*> &meshes);
     virtual void render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix);

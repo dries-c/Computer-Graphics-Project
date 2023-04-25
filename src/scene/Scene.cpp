@@ -16,6 +16,16 @@ void Scene::addObject(Model *object) {
     objects.push_back(object);
 }
 
+bool Scene::checkCollision(Entity &entity) {
+    for (Model *object: objects) {
+        if (object->checkCollision(entity)) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 Scene::Scene() {
     setupSkybox();
     setupMaze();
@@ -33,15 +43,15 @@ void Scene::setupMaze() {
     for(int i = 0; i < mazeParser->getMaze().size(); i++) {
         for(int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             if (mazeParser->getMaze()[i][j] == PositionEnum::WALL) {
-                wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, 0.0f, j)));
+                wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
             }
 
-            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
+            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, 0.0f, j)));
         }
     }
 
     addObject(new Model(wallMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), wallMeshes));
-    addObject(new Model(floorMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), floorMeshes));
+    //addObject(new Model(floorMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), floorMeshes));
 }
 
 Scene::~Scene() {

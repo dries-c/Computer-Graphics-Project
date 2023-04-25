@@ -5,45 +5,40 @@
 #include "glm/mat4x4.hpp"
 #include "Direction.h"
 #include "FreeCamControls.h"
+#include "../utils/AxisAlignedBB.h"
+#include "../entity/Entity.h"
 #include <string>
 
-#define GRAVITY 9.81f
-#define JUMP_SPEED 4.0f
-#define MIN_Y 0.0f
 #define SPEED 2.0f
 
-class Camera{
+class Camera : public Entity {
 protected:
     static Camera* instance;
     Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
 private:
-    glm::vec3 position{};
     glm::vec3 front{};
     glm::vec3 up{};
     glm::vec3 right{};
     glm::vec3 worldUp{};
-    glm::vec3 velocity{};
 
-    bool freeCamera = false;
     float FREE_CAM_SPEED = 2.0f;
-
 
     int width{};
     int height{};
 
-    float yaw;
-    float pitch;
     float sensitivity;
     float fov;
     void updateCameraVectors();
-    bool isOnGround() const;
 
 public:
-    void physicsUpdate(float deltaTime);
     Camera(Camera &other) = delete;
     void operator=(const Camera &) = delete;
 
     static Camera* getInstance(glm::vec3 position = glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -90.0f, float pitch = 0.0f);
+
+    void update(float deltaTime) override;
+    void setPosition(glm::vec3 position) override;
+    void revertPosition() override;
 
     void processMouseMovement(float xoffset, float yoffset);
     void processMouseScroll(float yoffset);

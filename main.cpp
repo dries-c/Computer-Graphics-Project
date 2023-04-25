@@ -34,7 +34,11 @@ int main() {
 
         auto camera = Camera::getInstance();
         processInput(camera, window);
-        camera->physicsUpdate(deltaTime);
+        camera->update(deltaTime);
+
+        if (scene.checkCollision(*camera)) {
+            //camera->revertPosition();
+        }
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);

@@ -4,11 +4,14 @@
 #include <vector>
 #include "texture/Texture.h"
 #include "../../utils/Structs.h"
+#include "../../utils/AxisAlignedBB.h"
+#include "../../entity/Entity.h"
 
 class Mesh {
 private:
     unsigned int VAO, VBO, EBO;
     std::vector<Texture *> textures;
+    AxisAlignedBB boundingBox;
 
     unsigned int nextVertexAttribute = 0;
     int instanceCount = 0;
@@ -32,6 +35,14 @@ public:
      * @param count the number of instances
      */
     void setupInstancing(int count);
+
+    /**
+     * Checks if the camera is colliding with the mesh
+     * @param entity the entity to check
+     * @param modelMatrix the model matrix of the object
+     * @return true if the camera is colliding with the mesh
+     */
+    bool checkCollision(Entity &entity, glm::mat4 modelMatrix);
 };
 
 

@@ -56,3 +56,16 @@ Model::~Model() {
 
     std::cout << "Model destroyed" << std::endl;
 }
+
+bool Model::checkCollision(Entity &entity) {
+    for (glm::mat4 modelMatrix: modelMatrices) {
+        for(Mesh *mesh: meshes) {
+            if (mesh->checkCollision(entity, modelMatrix)) {
+                std::cout << "Collision detected: " << modelMatrix[3][0] << ", " << modelMatrix[3][1] << ", " << modelMatrix[3][2] << std::endl;
+                return true;
+            }
+        }
+    }
+
+    return false;
+}

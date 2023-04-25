@@ -11,6 +11,7 @@ public:
     Scene();
     ~Scene();
     void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
+    bool checkCollision(Entity &entity);
 private:
     std::vector<Model* > objects;
     Skybox* skybox;

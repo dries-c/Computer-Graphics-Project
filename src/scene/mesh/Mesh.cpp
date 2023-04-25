@@ -2,11 +2,13 @@
 
 #include "glad/glad.h"
 #include "texture/Texture.h"
+#include "../../entity/Entity.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,const std::vector<Texture *> &textures) : textures(textures) {
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
+           const std::vector<Texture *> &textures) : textures(textures), boundingBox(vertices) {
     indicesCount = indices.size();
 
     glGenVertexArrays(1, &VAO);
@@ -28,12 +30,14 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
 
     // Normals attribute
     glEnableVertexAttribArray(nextVertexAttribute);
-    glVertexAttribPointer(nextVertexAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, normal));
+    glVertexAttribPointer(nextVertexAttribute, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, normal));
     nextVertexAttribute++;
 
     // Vertex texture coords
     glEnableVertexAttribArray(nextVertexAttribute);
-    glVertexAttribPointer(nextVertexAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),(void *) offsetof(Vertex, texCoords));
+    glVertexAttribPointer(nextVertexAttribute, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex),
+                          (void *) offsetof(Vertex, texCoords));
     nextVertexAttribute++;
 
     glBindVertexArray(0);
@@ -77,4 +81,16 @@ Mesh::~Mesh() {
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &EBO);
+}
+
+bool Mesh::checkCollision(Entity &entity, glm::mat4 modelMatrix) {
+    AxisAlignedBB transformedBoundingBox = boundingBox.transform(modelMatrix);
+    AxisAlignedBB entityBoundingBox = entity.getBoundingBox();
+
+    if (transformedBoundingBox.intersects(entityBoundingBox)) {
+        entity.onCollision(transformedBoundingBox);
+        return true;
+    }
+
+    return false;
 }
