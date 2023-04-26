@@ -6,3 +6,4 @@ lib/
 /includes
 /lib
 CMakeLists.txt
+resources/maze/maze.txt
