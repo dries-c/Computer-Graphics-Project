@@ -38,7 +38,7 @@ void Scene::setupMaze() {
 
     std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/cube.obj");
     std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
-    new CustomMazeParser(79, 79);
+    new CustomMazeParser(19, 19);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     std::vector<glm::mat4> floorMatrices = {};
@@ -46,7 +46,7 @@ void Scene::setupMaze() {
     for(int i = 0; i < mazeParser->getMaze().size(); i++) {
         for(int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             if (mazeParser->getMaze()[i][j] == PositionEnum::WALL) {
-                wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
+                wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, -j)));
             }
 
             floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
