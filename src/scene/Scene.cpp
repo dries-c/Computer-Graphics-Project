@@ -3,6 +3,8 @@
 #include "../utils/ModelLoader.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "../parser/FileMazeParser.h"
+#include "../parser/CustomMazeParser.h"
+
 #include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
@@ -36,6 +38,7 @@ void Scene::setupMaze() {
 
     std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/cube.obj");
     std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
+    new CustomMazeParser(79, 79);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     std::vector<glm::mat4> floorMatrices = {};
@@ -46,7 +49,7 @@ void Scene::setupMaze() {
                 wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
             }
 
-            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, 0.0f, j)));
+            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
         }
     }
 
