@@ -16,6 +16,7 @@ private:
     void PrintGrid();
     void saveGridToFile(char *filename);
     void createEntranceAndExit();
+    void checkHeightAndWidth(int height, int width);
 
 
 public:

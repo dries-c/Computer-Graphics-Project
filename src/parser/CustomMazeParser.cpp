@@ -122,8 +122,32 @@ void CustomMazeParser::PrintGrid() {
         cout << endl;
     }
 }
+void CustomMazeParser::checkHeightAndWidth(int height, int width) {
+    //make sure height and width are odd
+    if (height % 2 == 0 || width % 2 == 0) {
+        cout << "Height and width must be odd numbers" << endl;
+        exit(1);
+    }
+    //make sure height and width are greater than 5
+    if (height < 5 || width < 5) {
+        cout << "Height and width must be greater than 5" << endl;
+        exit(1);
+    }
+    //make sure height is at least the half of width
+    if (height < width / 2) {
+        cout << "Height must be at least half of width" << endl;
+        exit(1);
+    }
+    //make sure height is not more than width
+    if (height > width) {
+        cout << "Height must be less than width" << endl;
+        exit(1);
+    }
+
+}
 
 CustomMazeParser::CustomMazeParser(int height, int width) {
+    checkHeightAndWidth(height, width);
     this->height = height;
     this->width = width;
 //make maze 2d vector of chars with height and width
@@ -138,7 +162,7 @@ CustomMazeParser::CustomMazeParser(int height, int width) {
     ResetGrid();
     goToSpace(1, 1);
     createEntranceAndExit();
-    saveGridToFile("maze/maze.txt");
+    saveGridToFile("../resources/maze/maze.txt");
     PrintGrid();
 
 }
