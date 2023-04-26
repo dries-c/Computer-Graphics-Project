@@ -6,7 +6,7 @@
 
 #define MIN_Y 0.0f
 #define GRAVITY 9.81f
-#define JUMP_SPEED 4.0f
+#define JUMP_SPEED 4.5f
 
 class Entity {
 protected:

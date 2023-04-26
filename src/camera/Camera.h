@@ -9,7 +9,7 @@
 #include "../entity/Entity.h"
 #include <string>
 
-#define SPEED 2.0f
+#define SPEED 3.0f
 
 class Camera : public Entity {
 protected:
