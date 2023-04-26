@@ -38,7 +38,7 @@ void Scene::setupMaze() {
 
     std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/cube.obj");
     std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
-    new CustomMazeParser(19, 19);
+    new CustomMazeParser(29, 29);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     std::vector<glm::mat4> floorMatrices = {};
@@ -49,12 +49,12 @@ void Scene::setupMaze() {
                 wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, -j)));
             }
 
-            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, j)));
+            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, -j)));
         }
     }
 
     addObject(new Model(wallMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), wallMeshes));
-    //addObject(new Model(floorMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), floorMeshes));
+    addObject(new Model(floorMatrices, new Shader("shaders/wall.vs", "shaders/wall.fs"), floorMeshes));
 }
 
 Scene::~Scene() {
