@@ -34,11 +34,7 @@ int main() {
 
         auto camera = Camera::getInstance();
         processInput(camera, window);
-        camera->update(deltaTime);
-
-        if (scene.checkCollision(*camera)) {
-            //camera->revertPosition();
-        }
+        camera->update(deltaTime, scene.getBoundingBoxes());
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -128,22 +124,22 @@ void processInput(Camera *camera, GLFWwindow *window) {
     }
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-        camera->processKeyboard(FORWARD);
+        camera->processKeyboard(INPUT_FORWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-        camera->processKeyboard(BACKWARD);
+        camera->processKeyboard(INPUT_BACKWARD);
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-        camera->processKeyboard(LEFT);
+        camera->processKeyboard(INPUT_LEFT);
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-        camera->processKeyboard(RIGHT);
+        camera->processKeyboard(INPUT_RIGHT);
     }
     if (glfwGetKey(window, GLFW_KEY_SPACE)== GLFW_PRESS){
-        camera->processKeyboard(JUMP);
+        camera->processKeyboard(INPUT_JUMP);
     }
     if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS){
-        camera->processKeyboard(DOWN);
+        camera->processKeyboard(INPUT_DOWN);
     }
     if (glfwGetKey(window, GLFW_KEY_F) == GLFW_PRESS){
         camera->processKeyboard(TOGGLE_FREECAM);
