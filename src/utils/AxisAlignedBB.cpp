@@ -1,55 +1,70 @@
 #include "AxisAlignedBB.h"
+#include <iostream>
 
 bool AxisAlignedBB::intersects(AxisAlignedBB &bb) const {
-    return minX < bb.maxX && maxX > bb.minX &&
-           minY < bb.maxY && maxY > bb.minY &&
-           minZ < bb.maxZ && maxZ > bb.minZ;
+    return (min.x <= bb.max.x && max.x >= bb.min.x) &&
+           (min.y <= bb.max.y && max.y >= bb.min.y) &&
+           (min.z <= bb.max.z && max.z >= bb.min.z);
 }
 
-AxisAlignedBB::AxisAlignedBB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : minX(minX),
-                                                                                                       minY(minY),
-                                                                                                       minZ(minZ),
-                                                                                                       maxX(maxX),
-                                                                                                       maxY(maxY),
-                                                                                                       maxZ(maxZ) {}
+AxisAlignedBB::AxisAlignedBB(glm::vec3 min, glm::vec3 max) : min(min), max(max) {}
+
+AxisAlignedBB::AxisAlignedBB(float minX, float minY, float minZ, float maxX, float maxY, float maxZ) : min(minX, minY,
+                                                                                                           minZ),
+                                                                                                       max(maxX, maxY,
+                                                                                                           maxZ) {}
 
 AxisAlignedBB AxisAlignedBB::transform(glm::mat4 transformation) const {
-    glm::vec4 min = transformation * glm::vec4(minX, minY, minZ, 1.0f);
-    glm::vec4 max = transformation * glm::vec4(maxX, maxY, maxZ, 1.0f);
-
-    return {min.x, min.y, min.z, max.x, max.y, max.z};
+    return {transformation * glm::vec4(min, 1.0f), transformation * glm::vec4(max, 1.0f)};
 }
 
-AxisAlignedBB::AxisAlignedBB(const std::vector<Vertex>& vertices) {
-    minX = minY = minZ = std::numeric_limits<float>::max();
-    maxX = maxY = maxZ = std::numeric_limits<float>::min();
+AxisAlignedBB::AxisAlignedBB(const std::vector<Vertex> &vertices) {
+    float maxVal = std::numeric_limits<float>::max();
+    float minVal = std::numeric_limits<float>::min();
 
-    for (Vertex vertex : vertices) {
-        if (vertex.position.x < minX) {
-            minX = vertex.position.x;
-        }
-        if (vertex.position.y < minY) {
-            minY = vertex.position.y;
-        }
-        if (vertex.position.z < minZ) {
-            minZ = vertex.position.z;
-        }
-        if (vertex.position.x > maxX) {
-            maxX = vertex.position.x;
-        }
-        if (vertex.position.y > maxY) {
-            maxY = vertex.position.y;
-        }
-        if (vertex.position.z > maxZ) {
-            maxZ = vertex.position.z;
-        }
+    min = {maxVal, maxVal, maxVal};
+    max = {minVal, minVal, minVal};
+
+    for (auto vertex: vertices) {
+        glm::vec3 position = vertex.position;
+
+        if (position.x < min.x) min.x = position.x;
+        if (position.y < min.y) min.y = position.y;
+        if (position.z < min.z) min.z = position.z;
+
+        if (position.x > max.x) max.x = position.x;
+        if (position.y > max.y) max.y = position.y;
+        if (position.z > max.z) max.z = position.z;
     }
 }
 
 AxisAlignedBB AxisAlignedBB::offset(glm::vec3 offset) const {
-    return {minX + offset.x, minY + offset.y, minZ + offset.z, maxX + offset.x, maxY + offset.y, maxZ + offset.z};
+    return {min + offset, max + offset};
+}
+
+Face AxisAlignedBB::getIntersection(const AxisAlignedBB &bb) const {
+    glm::vec3 center = getCenter();
+    glm::vec3 bbCenter = bb.getCenter();
+    glm::vec3 delta = center - bbCenter;
+    glm::vec3 absDelta = glm::abs(delta);
+
+    float maxComponent = glm::max(absDelta.x, glm::max(absDelta.y, absDelta.z));
+
+    if (maxComponent == absDelta.x) {
+        return delta.x > 0 ? Face::FACE_LEFT : Face::FACE_RIGHT;
+    } else if (maxComponent == absDelta.z) {
+        return delta.z > 0 ? Face::FACE_BACK : Face::FACE_FRONT;
+    } else if (maxComponent == absDelta.y) {
+        return delta.y > 0 ? Face::FACE_TOP : Face::FACE_BOTTOM;
+    }
+
+    throw std::runtime_error("No intersection found");
 }
 
 glm::vec3 AxisAlignedBB::getCenter() const {
-    return {(minX + maxX) / 2, (minY + maxY) / 2, (minZ + maxZ) / 2};
+    return (min + max) / 2.0f;
+}
+
+glm::vec3 AxisAlignedBB::getSize() const {
+    return max - min;
 }

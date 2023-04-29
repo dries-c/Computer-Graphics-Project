@@ -1,0 +1,13 @@
+#ifndef OPENGL_PROJECT_INPUT_H
+#define OPENGL_PROJECT_INPUT_H
+
+enum Input {
+    INPUT_FORWARD,
+    INPUT_BACKWARD,
+    INPUT_LEFT,
+    INPUT_RIGHT,
+    INPUT_JUMP,
+    INPUT_DOWN
+};
+
+#endif

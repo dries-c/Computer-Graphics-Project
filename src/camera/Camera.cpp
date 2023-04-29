@@ -15,29 +15,29 @@ Camera *Camera::getInstance(glm::vec3 position, glm::vec3 up, float yaw, float p
     return instance;
 }
 
-void Camera::processKeyboard(Direction direction) {
+void Camera::processKeyboard(Input direction) {
     float speed = hasGravity ? SPEED : FREE_CAM_SPEED;
 
     switch (direction) {
-        case Direction::FORWARD: {
+        case Input::INPUT_FORWARD: {
             velocity.z += front.z * speed;
             velocity.x += front.x * speed;
         }
             break;
-        case Direction::BACKWARD: {
+        case Input::INPUT_BACKWARD: {
             velocity.z -= front.z * speed;
             velocity.x -= front.x * speed;
         }
             break;
-        case Direction::LEFT: {
+        case Input::INPUT_LEFT: {
             velocity -= right * speed;
         }
             break;
-        case Direction::RIGHT: {
+        case Input::INPUT_RIGHT: {
             velocity += right * speed;
         }
             break;
-        case Direction::JUMP: {
+        case Input::INPUT_JUMP: {
             if(hasGravity){
                 jump();
             } else {
@@ -45,7 +45,7 @@ void Camera::processKeyboard(Direction direction) {
             }
         }
             break;
-        case Direction::DOWN: {
+        case Input::INPUT_DOWN: {
             if (!hasGravity){
                 position.y -= FREE_CAM_SPEED / 500;
             }
@@ -110,7 +110,7 @@ void Camera::updateCameraVectors() {
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Entity(
         position,
-        AxisAlignedBB(-0.1f, -0.1f, -0.1f, 0.1f, 0.1f, 0.1f),
+        AxisAlignedBB(-0.1f, -0.8f, -0.1f, 0.1f, 0.8f, 0.1f),
         yaw,
         pitch
 ) {
@@ -139,17 +139,12 @@ void Camera::setWindowDimensions(int width, int height) {
     this->height = height;
 }
 
-void Camera::update(float deltaTime) {
-    Entity::update(deltaTime);
+void Camera::update(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
+    Entity::update(deltaTime, colliders);
     updateCameraVectors();
 }
 
 void Camera::setPosition(glm::vec3 position) {
     Entity::setPosition(position);
-    updateCameraVectors();
-}
-
-void Camera::revertPosition() {
-    Entity::revertPosition();
     updateCameraVectors();
 }

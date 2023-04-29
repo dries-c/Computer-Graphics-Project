@@ -37,12 +37,9 @@ public:
     void setupInstancing(int count);
 
     /**
-     * Checks if the camera is colliding with the mesh
-     * @param entity the entity to check
-     * @param modelMatrix the model matrix of the object
-     * @return true if the camera is colliding with the mesh
+     * Get the bounding box of the mesh
      */
-    bool checkCollision(Entity &entity, glm::mat4 modelMatrix);
+    AxisAlignedBB getBoundingBox();
 };
 
 

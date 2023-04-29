@@ -18,16 +18,6 @@ void Scene::addObject(Model *object) {
     objects.push_back(object);
 }
 
-bool Scene::checkCollision(Entity &entity) {
-    for (Model *object: objects) {
-        if (object->checkCollision(entity)) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
 Scene::Scene() {
     setupSkybox();
     setupMaze();
@@ -36,20 +26,21 @@ Scene::Scene() {
 void Scene::setupMaze() {
     ModelLoader* modelLoader = ModelLoader::getInstance();
 
-    std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/cube.obj");
-    std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
+    std::vector<Mesh*> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
+    std::vector<Mesh*> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
     new CustomMazeParser(29, 29);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
+    glm::mat4 base = glm::mat4(1.0f);
     std::vector<glm::mat4> floorMatrices = {};
     std::vector<glm::mat4> wallMatrices = {};
     for(int i = 0; i < mazeParser->getMaze().size(); i++) {
         for(int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             if (mazeParser->getMaze()[i][j] == PositionEnum::WALL) {
-                wallMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, -j)));
+                wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
             }
 
-            floorMatrices.push_back(glm::translate(glm::mat4(1.0f), glm::vec3(i, -1.0f, -j)));
+            floorMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
         }
     }
 
@@ -83,4 +74,15 @@ void Scene::setupSkybox() {
         "front.jpg",
         "back.jpg"
     });
+}
+
+std::vector<AxisAlignedBB> Scene::getBoundingBoxes() {
+    std::vector<AxisAlignedBB> boundingBoxes = {};
+
+    for (Model *object: objects) {
+        std::vector<AxisAlignedBB> objectBoundingBoxes = object->getBoundingBoxes();
+        boundingBoxes.insert(boundingBoxes.end(), objectBoundingBoxes.begin(), objectBoundingBoxes.end());
+    }
+
+    return boundingBoxes;
 }

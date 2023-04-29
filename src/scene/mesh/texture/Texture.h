@@ -8,7 +8,7 @@ class Texture {
 public:
     unsigned int ID;
 
-    explicit Texture(const char* path, int sWrap = GL_REPEAT, int tWrap = GL_REPEAT, int minFilter = GL_LINEAR, int magFilter = GL_LINEAR);
+    explicit Texture(const char* path);
     void bind(Shader &shader, int textureUnit = 0) const;
 };
 

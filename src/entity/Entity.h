@@ -4,7 +4,6 @@
 #include "glm/vec3.hpp"
 #include "../utils/AxisAlignedBB.h"
 
-#define MIN_Y 0.0f
 #define GRAVITY 9.81f
 #define JUMP_SPEED 4.5f
 
@@ -15,17 +14,17 @@ protected:
     glm::vec3 velocity{};
     AxisAlignedBB boundingBox;
 
-    bool hasGravity = true;
+    bool onGround = false;
+    bool hasGravity = false;
 
     float yaw;
     float pitch;
 public:
     explicit Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch);
-    virtual void update(float deltaTime);
+    virtual void update(float deltaTime, const std::vector<AxisAlignedBB> &colliders);
     [[nodiscard]] AxisAlignedBB getBoundingBox() const;
 
     virtual void setPosition(glm::vec3 position);
-    virtual void revertPosition();
     [[nodiscard]] glm::vec3 getPosition() const;
 
     void setHasGravity(bool hasGravity);
@@ -33,7 +32,7 @@ public:
 
     [[nodiscard]] bool isOnGround() const;
 
-    void onCollision(AxisAlignedBB &bb);
+    void onCollision(const AxisAlignedBB &collider);
 };
 
 

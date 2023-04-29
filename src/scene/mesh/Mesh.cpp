@@ -83,14 +83,6 @@ Mesh::~Mesh() {
     glDeleteBuffers(1, &EBO);
 }
 
-bool Mesh::checkCollision(Entity &entity, glm::mat4 modelMatrix) {
-    AxisAlignedBB transformedBoundingBox = boundingBox.transform(modelMatrix);
-    AxisAlignedBB entityBoundingBox = entity.getBoundingBox();
-
-    if (transformedBoundingBox.intersects(entityBoundingBox)) {
-        entity.onCollision(transformedBoundingBox);
-        return true;
-    }
-
-    return false;
+AxisAlignedBB Mesh::getBoundingBox() {
+    return boundingBox;
 }
