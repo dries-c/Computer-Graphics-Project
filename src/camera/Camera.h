@@ -29,6 +29,8 @@ private:
     float sensitivity;
     float fov;
     void updateCameraVectors();
+    double freeCamToggleTime = 0.0f;
+    const double FREE_CAM_TOGGLE_DELAY = 0.2f;
 
 public:
     Camera(Camera &other) = delete;
