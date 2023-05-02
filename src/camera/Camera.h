@@ -25,6 +25,8 @@ private:
     glm::vec3 worldUp{};
 
     float FREE_CAM_SPEED = 2.0f;
+    double freeCamToggleTime = 0.0f;
+    const double FREE_CAM_TOGGLE_DELAY = 0.2f;
 
     int width{};
     int height{};
@@ -34,7 +36,6 @@ private:
 
     void updateCameraVectors();
     Interactable* rayCast(const std::vector<Interactable *> &interactables);
-
 public:
     Camera(Camera &other) = delete;
 

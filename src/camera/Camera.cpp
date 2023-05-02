@@ -2,6 +2,7 @@
 
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
+#include "GLFW/glfw3.h"
 #include <algorithm>
 #include <iostream>
 
@@ -58,7 +59,11 @@ void Camera::processKeyboard(Input direction) {
 void Camera::processKeyboard(FreeCamControls control) {
     switch (control) {
         case FreeCamControls::TOGGLE_FREECAM:
-            setHasGravity(!hasGravity);
+
+            if (glfwGetTime() - freeCamToggleTime > FREE_CAM_TOGGLE_DELAY) {
+                setHasGravity(!hasGravity);
+                freeCamToggleTime = glfwGetTime();
+            }
             break;
         case FreeCamControls::FASTER_FREECAM:
             if (!hasGravity) {
@@ -114,6 +119,7 @@ Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Entit
         yaw,
         pitch
 ) {
+
     this->up = up;
     this->worldUp = up;
     this->sensitivity = 0.1f;
