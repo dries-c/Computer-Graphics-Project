@@ -1,14 +1,15 @@
 #include "Skybox.h"
 #include "glad/glad.h"
 
-Skybox::Skybox(std::vector<std::string> faces) : shader(new Shader("shaders/skybox.vs", "shaders/skybox.fs")), texture(new SkyboxTexture(faces)) {
+Skybox::Skybox(std::vector<std::string> faces) : shader(new Shader("shaders/skybox.vs", "shaders/skybox.fs")),
+                                                 texture(new SkyboxTexture(faces)) {
     std::vector<Vertex> vertices;
-    bindToVector(vertices, glm::vec3(-1.0f,  -1.0f, 1.0f));
+    bindToVector(vertices, glm::vec3(-1.0f, -1.0f, 1.0f));
     bindToVector(vertices, glm::vec3(1.0f, -1.0f, 1.0f));
     bindToVector(vertices, glm::vec3(1.0f, 1.0f, 1.0f));
     bindToVector(vertices, glm::vec3(-1.0f, 1.0f, 1.0f));
 
-    bindToVector(vertices, glm::vec3(-1.0f,  -1.0f, -1.0f));
+    bindToVector(vertices, glm::vec3(-1.0f, -1.0f, -1.0f));
     bindToVector(vertices, glm::vec3(1.0f, -1.0f, -1.0f));
     bindToVector(vertices, glm::vec3(1.0f, 1.0f, -1.0f));
     bindToVector(vertices, glm::vec3(-1.0f, 1.0f, -1.0f));

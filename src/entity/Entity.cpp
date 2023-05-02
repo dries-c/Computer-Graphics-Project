@@ -1,10 +1,15 @@
 #include "Entity.h"
+#include "glm/ext/matrix_transform.hpp"
 
 void Entity::setPosition(glm::vec3 pos) {
     this->position = pos;
+
+    if (model != nullptr) {
+        model->setModelMatrix(getModelMatrix());
+    }
 }
 
-void Entity::update(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
+void Entity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
     if (hasGravity) {
         velocity.y -= GRAVITY * deltaTime;
     }
@@ -79,5 +84,42 @@ void Entity::onCollision(const AxisAlignedBB &collider) {
         case Face::FACE_BACK:
             position.z = collider.max.z + halfSize.z;
             break;
+    }
+}
+
+void Entity::setModel(Model *newModel) {
+    if (newModel->isInstanced()) {
+        throw std::runtime_error("Cannot set instanced model to entity");
+    }
+
+    this->model = newModel;
+}
+
+Model *Entity::getModel() {
+    return model;
+}
+
+glm::mat4 Entity::getModelMatrix() const {
+    glm::mat4 modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::translate(modelMatrix, position);
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(yaw), glm::vec3(0.0f, 1.0f, 0.0f));
+    modelMatrix = glm::rotate(modelMatrix, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    return modelMatrix;
+}
+
+void Entity::onAttack() {
+    std::cout << "Entity attacked" << std::endl;
+}
+
+void Entity::onInteract() {
+    std::cout << "Entity interacted" << std::endl;
+}
+
+std::vector<AxisAlignedBB> Entity::getBoundingBoxes() const {
+    if (model == nullptr) {
+        return {getBoundingBox()};
+    } else {
+        return model->getBoundingBoxes(getModelMatrix());
     }
 }

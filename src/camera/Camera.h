@@ -7,14 +7,17 @@
 #include "FreeCamControls.h"
 #include "../utils/AxisAlignedBB.h"
 #include "../entity/Entity.h"
+#include "../utils/Interactable.h"
 #include <string>
 
 #define SPEED 3.0f
 
 class Camera : public Entity {
 protected:
-    static Camera* instance;
+    static Camera *instance;
+
     Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch);
+
 private:
     glm::vec3 front{};
     glm::vec3 up{};
@@ -28,26 +31,40 @@ private:
 
     float sensitivity;
     float fov;
+
     void updateCameraVectors();
+    Interactable* rayCast(const std::vector<Interactable *> &interactables);
 
 public:
     Camera(Camera &other) = delete;
+
     void operator=(const Camera &) = delete;
 
-    static Camera* getInstance(glm::vec3 position = glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -45.0f, float pitch = 0.0f);
+    static Camera *getInstance(glm::vec3 position = glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -45.0f, float pitch = 0.0f);
 
-    void update(float deltaTime, const std::vector<AxisAlignedBB> &colliders) override;
+    void doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) override;
+
     void setPosition(glm::vec3 position) override;
 
     void processMouseMovement(float xoffset, float yoffset);
+
     void processMouseScroll(float yoffset);
+
     void processKeyboard(Input direction);
+
     void processKeyboard(FreeCamControls direction);
+
     [[nodiscard]] std::string toString() const;
+
     [[nodiscard]] glm::mat4 getViewMatrix() const;
+
     [[nodiscard]] glm::mat4 getProjectionMatrix() const;
 
     void setWindowDimensions(int width, int height);
+
+    void interact(const std::vector<Interactable *> &interactables);
+
+    void attack(const std::vector<Interactable *> &interactables);
 };
 
 #endif

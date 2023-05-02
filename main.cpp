@@ -8,16 +8,18 @@
 void setupGlfw();
 void bindGlad();
 void processInput(Camera *camera, GLFWwindow *window);
-GLFWwindow *createWindow(int width, int height, const char *title);
+GLFWwindow *createWindow(int width, int xPos, const char *yPos);
+
+static Scene* scene;
 
 int main() {
     setupGlfw();
-
     auto window = createWindow(800, 600, "OpenGL Project");
+
+    scene = new Scene();
 
     double lastTime = glfwGetTime();
     float deltaTime;
-    Scene scene = Scene();
 
     while (true) {
         if (glfwWindowShouldClose(window)) {
@@ -28,13 +30,13 @@ int main() {
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
 #ifdef __APPLE__
-        std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
+        //std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
 #endif
         lastTime = currentTime;
 
         auto camera = Camera::getInstance();
         processInput(camera, window);
-        camera->update(deltaTime, scene.getBoundingBoxes());
+        camera->doPhysics(deltaTime, scene->getBoundingBoxes());
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -42,7 +44,7 @@ int main() {
         glm::mat4 viewMatrix = camera->getViewMatrix();
         glm::mat4 projectionMatrix = camera->getProjectionMatrix();
 
-        scene.render(viewMatrix, projectionMatrix);
+        scene->render(viewMatrix, projectionMatrix, deltaTime);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -91,23 +93,26 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
         glViewport(0, 0, width, height);
         Camera::getInstance()->setWindowDimensions(width, height);
     });
-    glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xpos, double ypos) {
-        static double lastX = xpos;
-        static double lastY = ypos;
-        static bool firstMouse = true;
-
-        if (firstMouse) {
-            lastX = xpos;
-            lastY = ypos;
-            firstMouse = false;
+    glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) {
+        if (action == GLFW_PRESS) {
+            if (button == GLFW_MOUSE_BUTTON_LEFT) {
+                Camera::getInstance()->attack(scene->getInteractables());
+            } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
+                Camera::getInstance()->interact(scene->getInteractables());
+            }
         }
+    });
+    glfwSetCursorPosCallback(window, [](GLFWwindow *window, double xPos, double yPos) {
+        static double lastX = xPos;
+        static double lastY = yPos;
 
-        double xoffset = xpos - lastX;
-        double yoffset = lastY - ypos;
-        lastX = xpos;
-        lastY = ypos;
+        float xOffset = xPos - lastX;
+        float yOffset = lastY - yPos;
 
-        Camera::getInstance()->processMouseMovement((float) xoffset, (float) yoffset);
+        lastX = xPos;
+        lastY = yPos;
+
+        Camera::getInstance()->processMouseMovement(xOffset, yOffset);
     });
     glfwSetScrollCallback(window, [](GLFWwindow *window, double xoffset, double yoffset) {
         Camera::getInstance()->processMouseScroll((float) yoffset);
@@ -122,7 +127,6 @@ void processInput(Camera *camera, GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
-
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
         camera->processKeyboard(INPUT_FORWARD);
     }

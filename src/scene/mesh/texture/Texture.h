@@ -9,7 +9,7 @@ public:
     unsigned int ID;
 
     explicit Texture(const char* path);
-    void bind(Shader &shader, int textureUnit = 0) const;
+    void bind(const Shader &shader, int textureUnit = 0) const;
 };
 
 

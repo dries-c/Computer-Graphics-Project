@@ -5,7 +5,7 @@ void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatri
     shader->bind();
 
     // the model matrix is only needed if there is more than one model
-    if (modelMatrices.size() == 1) {
+    if (!isInstanced()) {
         shader->setMat4("model", modelMatrices[0]);
     }
 
@@ -33,10 +33,10 @@ void Model::setupInstancing() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Model::Model(glm::mat4 modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes) : Model(
-        std::vector<glm::mat4>{modelMatrices}, shader, meshes) {}
+Model::Model(const glm::mat4 modelMatrix, const Shader *shader, const std::vector<Mesh *> &meshes) : Model(
+        std::vector<glm::mat4>{modelMatrix}, shader, meshes) {}
 
-Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes)
+Model::Model(const std::vector<glm::mat4> &modelMatrices, const Shader *shader, const std::vector<Mesh *> &meshes)
         : modelMatrices(modelMatrices), shader(shader), meshes(meshes) {
     if (modelMatrices.size() > 1) {
         setupInstancing();
@@ -48,7 +48,7 @@ Model::~Model() {
         delete mesh;
     }
 
-    if (modelMatrices.size() > 1) {
+    if (isInstanced()) {
         glDeleteBuffers(1, &buffer);
     }
 
@@ -57,15 +57,29 @@ Model::~Model() {
     std::cout << "Model destroyed" << std::endl;
 }
 
-std::vector<AxisAlignedBB> Model::getBoundingBoxes() {
-    std::vector<AxisAlignedBB> boundingBoxes;
+std::vector<glm::mat4> Model::getModelMatrices() const {
+    return modelMatrices;
+}
 
-    for(glm::mat4 modelMatrix: modelMatrices) {
-        for (Mesh *mesh: meshes) {
-            boundingBoxes.push_back(mesh->getBoundingBox().transform(modelMatrix));
-        }
+std::vector<AxisAlignedBB> Model::getBoundingBoxes(const glm::mat4 &modelMatrix) const {
+    std::vector<AxisAlignedBB> boundingBoxes = {};
+    boundingBoxes.reserve(meshes.size());
+
+    for (Mesh *mesh: meshes) {
+        boundingBoxes.push_back(mesh->getBoundingBox().transform(modelMatrix));
     }
 
     return boundingBoxes;
 }
 
+bool Model::isInstanced() const {
+    return modelMatrices.size() > 1;
+}
+
+void Model::setModelMatrix(const glm::mat4 &modelMatrix) {
+    if (isInstanced()) {
+        throw std::runtime_error("Cannot set model matrix of instanced model");
+    }
+
+    modelMatrices[0] = modelMatrix;
+}

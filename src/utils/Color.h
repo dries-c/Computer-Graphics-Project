@@ -1,5 +1,6 @@
 #ifndef OPENGL_PROJECT_COLOR_H
 #define OPENGL_PROJECT_COLOR_H
+
 #include <array>
 #include <algorithm>
 

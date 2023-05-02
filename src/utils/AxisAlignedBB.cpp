@@ -42,13 +42,31 @@ AxisAlignedBB AxisAlignedBB::offset(glm::vec3 offset) const {
     return {min + offset, max + offset};
 }
 
+float AxisAlignedBB::getIntersectionDistance(const glm::vec3 &origin, const glm::vec3 &direction) const {
+    glm::vec3 minTime = (min - origin) / direction; // travel time to reach min
+    glm::vec3 maxTime = (max - origin) / direction; // travel time to reach max
+
+    float tMin = foldByComponent(glm::min(minTime, maxTime), glm::max); // max of mins
+    float tMax = foldByComponent(glm::max(minTime, maxTime), glm::min); // min of maxs
+
+    if (tMax >= tMin) {
+        return foldByComponent(glm::min(minTime, maxTime), glm::max);
+    }
+
+    return -1;
+}
+
+float AxisAlignedBB::foldByComponent(glm::vec3 v, float (*f)(float, float)) {
+    return f(v.x, f(v.y, v.z));
+}
+
 Face AxisAlignedBB::getIntersection(const AxisAlignedBB &bb) const {
     glm::vec3 center = getCenter();
     glm::vec3 bbCenter = bb.getCenter();
     glm::vec3 delta = center - bbCenter;
     glm::vec3 absDelta = glm::abs(delta);
 
-    float maxComponent = glm::max(absDelta.x, glm::max(absDelta.y, absDelta.z));
+    float maxComponent = foldByComponent(absDelta, glm::max);
 
     if (maxComponent == absDelta.x) {
         return delta.x > 0 ? Face::FACE_LEFT : Face::FACE_RIGHT;

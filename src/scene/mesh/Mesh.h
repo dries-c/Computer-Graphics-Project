@@ -5,7 +5,6 @@
 #include "texture/Texture.h"
 #include "../../utils/Structs.h"
 #include "../../utils/AxisAlignedBB.h"
-#include "../../entity/Entity.h"
 
 class Mesh {
 private:
@@ -18,7 +17,9 @@ private:
     unsigned int indicesCount;
 
 public:
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, const std::vector<Texture *> &textures);
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
+         const std::vector<Texture *> &textures);
+
     ~Mesh();
 
     /**
@@ -27,7 +28,7 @@ public:
      * @pre the shader must be bound before calling this method
      * @param shader the shader to use
      */
-    void render(Shader &shader);
+    void render(const Shader &shader);
 
     /**
      * Setup the mesh for instancing

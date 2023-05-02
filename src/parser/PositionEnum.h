@@ -4,6 +4,7 @@
 enum PositionEnum {
     EMPTY,
     WALL,
+    OBSTACLE,
 };
 
 #endif

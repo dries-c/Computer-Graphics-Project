@@ -38,7 +38,7 @@ void Camera::processKeyboard(Input direction) {
         }
             break;
         case Input::INPUT_JUMP: {
-            if(hasGravity){
+            if (hasGravity) {
                 jump();
             } else {
                 position.y += FREE_CAM_SPEED / 500;
@@ -46,7 +46,7 @@ void Camera::processKeyboard(Input direction) {
         }
             break;
         case Input::INPUT_DOWN: {
-            if (!hasGravity){
+            if (!hasGravity) {
                 position.y -= FREE_CAM_SPEED / 500;
             }
         }
@@ -139,12 +139,49 @@ void Camera::setWindowDimensions(int width, int height) {
     this->height = height;
 }
 
-void Camera::update(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
-    Entity::update(deltaTime, colliders);
+Interactable *Camera::rayCast(const std::vector<Interactable *> &interactables) {
+    float closestDistance = std::numeric_limits<float>::max();
+    Interactable *closestInteractable = nullptr;
+
+    for (const auto interactable: interactables) {
+        for (const auto &bb: interactable->getBoundingBoxes()) {
+            float distance = bb.getIntersectionDistance(position, front);
+            if (distance == -1) {
+                continue;// No intersection
+            }
+
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestInteractable = interactable;
+            }
+        }
+    }
+
+    return closestInteractable;
+}
+
+void Camera::interact(const std::vector<Interactable *> &interactables) {
+    auto closestModel = rayCast(interactables);
+
+    if (closestModel != nullptr) {
+        closestModel->onInteract();
+    }
+}
+
+void Camera::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
+    Entity::doPhysics(deltaTime, colliders);
     updateCameraVectors();
 }
 
 void Camera::setPosition(glm::vec3 position) {
     Entity::setPosition(position);
     updateCameraVectors();
+}
+
+void Camera::attack(const std::vector<Interactable *> &interactables) {
+    auto closestModel = rayCast(interactables);
+
+    if (closestModel != nullptr) {
+        closestModel->onAttack();
+    }
 }

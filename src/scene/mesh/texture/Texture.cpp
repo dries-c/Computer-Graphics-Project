@@ -1,4 +1,5 @@
 #define STB_IMAGE_IMPLEMENTATION
+
 #include "Texture.h"
 
 #include "stb_image.h"
@@ -23,7 +24,7 @@ Texture::Texture(const char *path) {
 
     std::string fullPath = RESOURCES_PATH + path;
     unsigned char *data = stbi_load(fullPath.c_str(), &width, &height, &nrChannels, 0);
-    if(data) {
+    if (data) {
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
     } else {
@@ -33,7 +34,7 @@ Texture::Texture(const char *path) {
     stbi_image_free(data);
 }
 
-void Texture::bind(Shader &shader, int textureUnit) const {
+void Texture::bind(const Shader &shader, int textureUnit) const {
     glActiveTexture(GL_TEXTURE0 + textureUnit);
     shader.setInt("texture" + std::to_string(textureUnit + 1), textureUnit);
     glBindTexture(GL_TEXTURE_2D, ID);

@@ -5,23 +5,31 @@
 #include "skybox/Skybox.h"
 #include <vector>
 #include "../utils/Structs.h"
+#include "../utils/Interactable.h"
+#include "../entity/Entity.h"
 
-class Scene{
+class Scene {
 public:
     Scene();
+
     ~Scene();
-    void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
+
+    void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float deltaTime);
+
+    void removeObject(Model *object);
+
     std::vector<AxisAlignedBB> getBoundingBoxes();
+    std::vector<Interactable *> getInteractables();
+
 private:
-    std::vector<Model* > objects;
-    Skybox* skybox;
-    void addObject(Model* object);
+    std::vector<Model *> objects;
+    std::vector<Entity *> entities;
+    Skybox *skybox;
+
+    void addObject(Model *object);
+    void addEntity(Entity *entity);
     void setupMaze();
-
-    static void bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector, glm::vec2 texCoords);
-
     void setupSkybox();
 };
-
 
 #endif
