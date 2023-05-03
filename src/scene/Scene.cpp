@@ -3,6 +3,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
+#include "../sound/Sound.h"
 
 #include <iostream>
 
@@ -78,6 +79,9 @@ void Scene::setupMaze() {
 
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/instanced.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/instanced.fs"), floorMeshes));
+
+    Sound sound = Sound("cave1.ogg");
+    sound.play();
 }
 
 Scene::~Scene() {

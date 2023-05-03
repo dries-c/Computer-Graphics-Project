@@ -3,6 +3,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "GLFW/glfw3.h"
+#include "../sound/SoundProvider.h"
 #include <algorithm>
 #include <iostream>
 #include <limits>
@@ -113,6 +114,8 @@ void Camera::updateCameraVectors() {
     front = glm::normalize(newFront);
     right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
+
+    SoundProvider::getInstance()->updateCameraPosition(position, front, up);
 }
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Entity(
