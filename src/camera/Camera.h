@@ -66,6 +66,8 @@ public:
     void interact(const std::vector<Interactable *> &interactables);
 
     void attack(const std::vector<Interactable *> &interactables);
+
+    glm::vec3 getFront() const;
 };
 
 #endif
