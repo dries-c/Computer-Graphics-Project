@@ -1,14 +1,12 @@
 #include "Model.h"
 #include <iostream>
 
-void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const Lighting &lighting) {
+void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix) {
     shader->bind();
 
+    Lighting::getInstance()->bind(shader);
+
     // the model matrix is only needed if there is more than one model
-    lighting.bind(shader);
-
-    shader->setFloat("material.shininess", 32.0f);
-
     if (!isInstanced()) {
         shader->setMat4("model", modelMatrices[0]);
     }
@@ -52,9 +50,14 @@ Model::~Model() {
         delete mesh;
     }
 
+    for(PointLight *lightSource: lightSources) {
+        delete lightSource;
+    }
+
     if (isInstanced()) {
         glDeleteBuffers(1, &buffer);
     }
+
 
     delete shader;
 
@@ -86,4 +89,15 @@ void Model::setModelMatrix(const glm::mat4 &modelMatrix) {
     }
 
     modelMatrices[0] = modelMatrix;
+}
+
+void Model::setLightSource(const PointLight &source) {
+    auto lighting = Lighting::getInstance();
+    for (auto model: modelMatrices) {
+        auto clonedSource = new PointLight(source);
+        clonedSource->setPosition(glm::vec3(model[3]));
+        lighting->addPointLight(clonedSource);
+
+        lightSources.push_back(clonedSource);
+    }
 }

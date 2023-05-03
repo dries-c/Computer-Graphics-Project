@@ -1,18 +1,27 @@
 #ifndef OPENGL_PROJECT_LIGHTING_H
 #define OPENGL_PROJECT_LIGHTING_H
 
-#include "DirectionalLightSource.h"
+#include "DirectionalLight.h"
+#include "PointLight.h"
+#include "SpotLight.h"
 
 class Lighting {
 private:
-    DirectionalLightSource *directionalLightSource;
-    glm::vec3 cameraPosition = glm::vec3(0.0f);
-public:
+    static Lighting* instance;
     Lighting();
+
+    DirectionalLight *directionalLightSource;
+    SpotLight *spotLightSource;
+    glm::vec3 cameraPosition = glm::vec3(0.0f);
+    std::vector<PointLight *> pointLights;
+public:
     ~Lighting();
 
+    void addPointLight(PointLight *pointLight);
+    void updateCameraPosition(glm::vec3 pos, glm::vec3 direction);
+
     void bind(Shader *shader) const;
-    void updateCameraPosition(glm::vec3 cameraPosition);
+    static Lighting *getInstance();
 };
 
 

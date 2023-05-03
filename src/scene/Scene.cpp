@@ -18,7 +18,7 @@ void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float del
 
         auto model = entity->getModel();
         if (model != nullptr) {
-            model->render(viewMatrix, projectionMatrix, *lighting);
+            model->render(viewMatrix, projectionMatrix);
         }
     }
     for (Model *object: objects) {
@@ -28,7 +28,7 @@ void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float del
             }
         }
 
-        object->render(viewMatrix, projectionMatrix, *lighting);
+        object->render(viewMatrix, projectionMatrix);
     }
     skybox->render(viewMatrix, projectionMatrix);
 }
@@ -40,8 +40,6 @@ void Scene::addObject(Model *object) {
 Scene::Scene() {
     setupSkybox();
     setupMaze();
-
-    lighting = new Lighting();
 }
 
 void Scene::setupMaze() {
@@ -64,17 +62,26 @@ void Scene::setupMaze() {
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
-                addObject(new InteractableModel(glm::translate(base, glm::vec3(i, -1.0f, -j)),
-                                                new Shader("shaders/singular.vs", "shaders/singular.fs"),
-                                                obstacleMesh));
+                auto model = new InteractableModel(glm::translate(base, glm::vec3(i, -1.0f, -j)),
+                                                   new Shader("shaders/singular.vs", "shaders/shader.fs"),
+                                                   obstacleMesh);
+                model->setLightSource(PointLight(
+                        glm::vec3(0.05f, 0.05f, 0.05f),
+                        glm::vec3(0.8f, 0.8f, 0.8f),
+                        glm::vec3(1.0f, 1.0f, 1.0f),
+                        1.0f,
+                        0.09f,
+                        0.032f
+                ));
+                addObject(model);
             }
 
             floorMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
         }
     }
 
-    addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/instanced.fs"), wallMeshes));
-    addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/instanced.fs"), floorMeshes));
+    addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
+    addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
     Sound sound = Sound("cave1.ogg");
     sound.play();

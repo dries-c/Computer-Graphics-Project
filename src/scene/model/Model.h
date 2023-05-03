@@ -15,6 +15,7 @@ protected:
     std::vector<Mesh *> meshes;
     std::vector<glm::mat4> modelMatrices;
     Shader *shader;
+    std::vector<PointLight *> lightSources;
     unsigned int buffer{};
 
 public:
@@ -24,7 +25,9 @@ public:
 
     Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes);
 
-    virtual void render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const Lighting &lighting);
+    virtual void render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix);
+
+    void setLightSource(const PointLight& lightSource);
 
     [[nodiscard]] std::vector<AxisAlignedBB> getBoundingBoxes(const glm::mat4 &modelMatrix) const;
 

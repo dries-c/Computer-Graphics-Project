@@ -1,16 +1,24 @@
 #include "Lighting.h"
 
-void Lighting::updateCameraPosition(glm::vec3 pos) {
-    this->cameraPosition = pos;
-}
+Lighting *Lighting::instance = nullptr;
 
 Lighting::Lighting() {
-    directionalLightSource = new DirectionalLightSource(
-            glm::vec3(-0.2f, -1.0f, -0.3f),
-            glm::vec3(0.05f, 0.05f, 0.05f),
-            glm::vec3(0.4f, 0.4f, 0.4f),
-            glm::vec3(0.5f, 0.5f, 0.5f)
+    directionalLightSource = new DirectionalLight(
+            glm::vec3(1.0f, 0.5f, 1.0f),
+            glm::vec3(0.0f),
+            glm::vec3(0.0f),
+            glm::vec3(0.0f)
     );
+    spotLightSource = new SpotLight(
+            glm::vec3(0.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            glm::vec3(1.0f, 1.0f, 1.0f),
+            cos(12.5f * M_PI / 180.0f),
+            cos(15.0f * M_PI / 180.0f),
+            1.0f,
+            0.09f,
+            0.032f
+   );
 }
 
 Lighting::~Lighting() {
@@ -20,4 +28,29 @@ Lighting::~Lighting() {
 void Lighting::bind(Shader *shader) const {
     shader->setVec3("cameraPos", cameraPosition);
     directionalLightSource->bind(shader, 0);
+
+    for (int i = 0; i < pointLights.size(); i++) {
+        pointLights[i]->bind(shader, i);
+    }
+    shader->setInt("pointLightCount", pointLights.size());
+
+    spotLightSource->bind(shader, 0);
+}
+
+void Lighting::addPointLight(PointLight *pointLight) {
+    pointLights.push_back(pointLight);
+}
+
+void Lighting::updateCameraPosition(glm::vec3 pos, glm::vec3 direction) {
+    this->cameraPosition = pos;
+
+    spotLightSource->updatePosition(pos, direction);
+}
+
+Lighting *Lighting::getInstance() {
+    if (instance == nullptr) {
+        instance = new Lighting();
+    }
+
+    return instance;
 }

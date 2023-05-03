@@ -115,6 +115,7 @@ void Camera::updateCameraVectors() {
     up = glm::normalize(glm::cross(right, front));
 
     SoundProvider::getInstance()->updateCameraPosition(position, front, up);
+    Lighting::getInstance()->updateCameraPosition(position, front);
 }
 
 Camera::Camera(glm::vec3 position, glm::vec3 up, float yaw, float pitch) : Entity(
@@ -194,8 +195,4 @@ void Camera::attack(const std::vector<Interactable *> &interactables) {
     if (closestModel != nullptr) {
         closestModel->onAttack();
     }
-}
-
-glm::vec3 Camera::getFront() const {
-    return front;
 }

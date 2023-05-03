@@ -8,7 +8,7 @@
 class LightSource {
 public:
     LightSource(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular) : ambient(ambient), diffuse(diffuse), specular(specular) {}
-    virtual void bind(Shader *shader, int index) = 0;
+    virtual void bind(Shader *shader, std::string prefix);
 
 protected:
     glm::vec3 ambient;
