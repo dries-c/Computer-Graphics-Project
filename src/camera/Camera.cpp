@@ -193,3 +193,7 @@ void Camera::attack(const std::vector<Interactable *> &interactables) {
         closestModel->onAttack();
     }
 }
+
+glm::vec3 Camera::getFront() const {
+    return front;
+}
