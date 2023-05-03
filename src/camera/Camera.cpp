@@ -5,6 +5,8 @@
 #include "GLFW/glfw3.h"
 #include <algorithm>
 #include <iostream>
+#include <limits>
+#include <float.h>
 
 Camera *Camera::instance = nullptr;
 
@@ -75,7 +77,7 @@ void Camera::processKeyboard(FreeCamControls control) {
             if (!hasGravity) {
                 //Subtract speed from free camera make sure it's at least 0.05
                 FREE_CAM_SPEED -= 0.01f;
-                FREE_CAM_SPEED = std::max(FREE_CAM_SPEED, 0.05f);
+                FREE_CAM_SPEED = max(FREE_CAM_SPEED, 0.05f);
             }
             break;
         case FreeCamControls::RESET_SPEED_FREECAM:
@@ -146,7 +148,7 @@ void Camera::setWindowDimensions(int width, int height) {
 }
 
 Interactable *Camera::rayCast(const std::vector<Interactable *> &interactables) {
-    float closestDistance = std::numeric_limits<float>::max();
+    float closestDistance = FLT_MAX;
     Interactable *closestInteractable = nullptr;
 
     for (const auto interactable: interactables) {
