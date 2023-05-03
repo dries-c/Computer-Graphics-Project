@@ -19,7 +19,7 @@ private:
 
     void processNode(aiNode *node, const aiScene *scene, unsigned int depth = 0);
     Mesh *processMesh(aiMesh *mesh, const aiScene *scene);
-    std::vector<Texture *> loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName);
+    Texture * loadMaterialTexture(aiMaterial *mat, aiTextureType type);
 
     static glm::vec3 aiVector3DToGlm(aiVector3D from);
     static glm::vec2 aiVector3DToGlmVec2(aiVector3D from);

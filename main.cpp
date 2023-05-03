@@ -30,7 +30,7 @@ int main() {
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
 #ifdef __APPLE__
-        //std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
+        std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
 #endif
         lastTime = currentTime;
 

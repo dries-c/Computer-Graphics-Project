@@ -6,8 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <iostream>
 
-Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
-           const std::vector<Texture *> &textures) : textures(textures), boundingBox(vertices) {
+Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, Material* material) : material(material), boundingBox(vertices) {
     indicesCount = indices.size();
 
     glGenVertexArrays(1, &VAO);
@@ -41,8 +40,8 @@ Mesh::Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> 
 }
 
 void Mesh::render(const Shader &shader) {
-    for (int i = 0; i < textures.size(); i++) {
-        textures[i]->bind(shader, i);
+    if (material != nullptr) {
+        material->bind(shader); // Skybox doesn't have a material
     }
 
     glBindVertexArray(VAO);

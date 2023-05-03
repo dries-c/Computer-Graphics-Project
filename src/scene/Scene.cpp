@@ -4,7 +4,6 @@
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
 #include "../sound/Sound.h"
-
 #include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float deltaTime) {
@@ -19,7 +18,7 @@ void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float del
 
         auto model = entity->getModel();
         if (model != nullptr) {
-            model->render(viewMatrix, projectionMatrix);
+            model->render(viewMatrix, projectionMatrix, *lighting);
         }
     }
     for (Model *object: objects) {
@@ -29,14 +28,9 @@ void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float del
             }
         }
 
-        object->render(viewMatrix, projectionMatrix);
+        object->render(viewMatrix, projectionMatrix, *lighting);
     }
     skybox->render(viewMatrix, projectionMatrix);
-}
-
-void Scene::removeObject(Model *object) {
-    objects.erase(std::remove(objects.begin(), objects.end(), object), objects.end());
-    delete object;
 }
 
 void Scene::addObject(Model *object) {
@@ -46,6 +40,8 @@ void Scene::addObject(Model *object) {
 Scene::Scene() {
     setupSkybox();
     setupMaze();
+
+    lighting = new Lighting();
 }
 
 void Scene::setupMaze() {

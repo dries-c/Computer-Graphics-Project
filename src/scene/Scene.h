@@ -7,6 +7,7 @@
 #include "../utils/Structs.h"
 #include "../utils/Interactable.h"
 #include "../entity/Entity.h"
+#include "lighting/Lighting.h"
 
 class Scene {
 public:
@@ -16,14 +17,13 @@ public:
 
     void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float deltaTime);
 
-    void removeObject(Model *object);
-
     std::vector<AxisAlignedBB> getBoundingBoxes();
     std::vector<Interactable *> getInteractables();
 
 private:
     std::vector<Model *> objects;
     std::vector<Entity *> entities;
+    Lighting *lighting;
     Skybox *skybox;
 
     void addObject(Model *object);

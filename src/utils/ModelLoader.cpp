@@ -24,7 +24,6 @@ std::vector<Mesh *> ModelLoader::loadMeshes(const std::string &path) {
         exit(EXIT_FAILURE);
     }
 
-
     processNode(scene->mRootNode, scene);
     loadedTextures.clear();
 
@@ -79,43 +78,41 @@ Mesh *ModelLoader::processMesh(aiMesh *mesh, const aiScene *scene) {
         }
     }
 
-    aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
+    aiMaterial *aiMaterial = scene->mMaterials[mesh->mMaterialIndex];
 
-    std::vector<Texture *> diffuseMaps = loadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-    textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
+    Texture* diffuseMap = loadMaterialTexture(aiMaterial, aiTextureType_DIFFUSE);
+    Texture* specularMap = loadMaterialTexture(aiMaterial, aiTextureType_SPECULAR);
+    Texture* normalMap = loadMaterialTexture(aiMaterial, aiTextureType_HEIGHT);
+    Texture* heightMap = loadMaterialTexture(aiMaterial, aiTextureType_AMBIENT);
 
-    std::vector<Texture *> specularMaps = loadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
-    textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
+    auto* material = new Material(
+        diffuseMap,
+        specularMap,
+        normalMap,
+        heightMap,
+        32.0f
+    );
 
-    std::vector<Texture *> normalMaps = loadMaterialTextures(material, aiTextureType_HEIGHT, "texture_normal");
-    textures.insert(textures.end(), normalMaps.begin(), normalMaps.end());
-
-    std::vector<Texture *> heightMaps = loadMaterialTextures(material, aiTextureType_AMBIENT, "texture_height");
-    textures.insert(textures.end(), heightMaps.begin(), heightMaps.end());
-
-    return new Mesh(vertices, indices, textures);
+    return new Mesh(vertices, indices, material);
 }
 
-std::vector<Texture *> ModelLoader::loadMaterialTextures(aiMaterial *mat, aiTextureType type, std::string typeName) {
-    std::vector<Texture *> textures;
-
+Texture * ModelLoader::loadMaterialTexture(aiMaterial *mat, aiTextureType type) {
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++) {
         aiString textureName;
         mat->GetTexture(type, i, &textureName);
 
         if (loadedTextures.find(textureName.C_Str()) != loadedTextures.end()) {
-            textures.push_back(loadedTextures[textureName.C_Str()]);
-            continue;
+            return loadedTextures[textureName.C_Str()];
         }
 
-        std::string path = directory + "/" + textureName.C_Str(); // todo: typeName
+        std::string path = directory + "/" + textureName.C_Str();
         auto *texture = new Texture(path.c_str());
 
         loadedTextures[textureName.C_Str()] = texture;
-        textures.push_back(texture);
+        return texture;
     }
 
-    return textures;
+    return nullptr;
 }
 
 ModelLoader *ModelLoader::getInstance() {

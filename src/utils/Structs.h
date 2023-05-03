@@ -12,5 +12,4 @@ struct Vertex {
     glm::vec3 bitangent;
 };
 
-
 #endif

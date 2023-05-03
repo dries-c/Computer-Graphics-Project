@@ -1,10 +1,14 @@
 #include "Model.h"
 #include <iostream>
 
-void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix) {
+void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix, const Lighting &lighting) {
     shader->bind();
 
     // the model matrix is only needed if there is more than one model
+    lighting.bind(shader);
+
+    shader->setFloat("material.shininess", 32.0f);
+
     if (!isInstanced()) {
         shader->setMat4("model", modelMatrices[0]);
     }
@@ -33,10 +37,10 @@ void Model::setupInstancing() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Model::Model(const glm::mat4 modelMatrix, const Shader *shader, const std::vector<Mesh *> &meshes) : Model(
+Model::Model(const glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes) : Model(
         std::vector<glm::mat4>{modelMatrix}, shader, meshes) {}
 
-Model::Model(const std::vector<glm::mat4> &modelMatrices, const Shader *shader, const std::vector<Mesh *> &meshes)
+Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes)
         : modelMatrices(modelMatrices), shader(shader), meshes(meshes) {
     if (modelMatrices.size() > 1) {
         setupInstancing();

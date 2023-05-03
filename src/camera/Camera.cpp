@@ -6,8 +6,7 @@
 #include "../sound/SoundProvider.h"
 #include <algorithm>
 #include <iostream>
-#include <limits>
-#include <float.h>
+#include <cfloat>
 
 Camera *Camera::instance = nullptr;
 
@@ -78,7 +77,7 @@ void Camera::processKeyboard(FreeCamControls control) {
             if (!hasGravity) {
                 //Subtract speed from free camera make sure it's at least 0.05
                 FREE_CAM_SPEED -= 0.01f;
-                FREE_CAM_SPEED = max(FREE_CAM_SPEED, 0.05f);
+                FREE_CAM_SPEED = fmax(FREE_CAM_SPEED, 0.05f);
             }
             break;
         case FreeCamControls::RESET_SPEED_FREECAM:

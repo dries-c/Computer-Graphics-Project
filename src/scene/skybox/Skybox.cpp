@@ -34,7 +34,7 @@ Skybox::Skybox(std::vector<std::string> faces) : shader(new Shader("shaders/skyb
             6, 7, 3
     };
 
-    mesh = new Mesh(vertices, indices, {});
+    mesh = new Mesh(vertices, indices, nullptr);
 }
 
 void Skybox::bindToVector(std::vector<Vertex> &vertices, glm::vec3 vector) {

@@ -5,11 +5,13 @@
 #include "texture/Texture.h"
 #include "../../utils/Structs.h"
 #include "../../utils/AxisAlignedBB.h"
+#include "Material.h"
 
 class Mesh {
 private:
     unsigned int VAO, VBO, EBO;
-    std::vector<Texture *> textures;
+    Material* material;
+
     AxisAlignedBB boundingBox;
 
     unsigned int nextVertexAttribute = 0;
@@ -17,8 +19,7 @@ private:
     unsigned int indicesCount;
 
 public:
-    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices,
-         const std::vector<Texture *> &textures);
+    Mesh(const std::vector<Vertex> &vertices, const std::vector<unsigned int> &indices, Material* material);
 
     ~Mesh();
 
