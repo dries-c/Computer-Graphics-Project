@@ -1,4 +1,5 @@
 #include "DirectionalLight.h"
+#include <stdexcept>
 
 DirectionalLight::DirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse,
                                    glm::vec3 specular) : LightSource(ambient, diffuse, specular),

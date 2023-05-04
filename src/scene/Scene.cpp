@@ -3,7 +3,11 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
+
+#ifdef __APPLE__
 #include "../sound/Sound.h"
+#endif
+
 #include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float deltaTime) {
@@ -83,8 +87,10 @@ void Scene::setupMaze() {
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
+#ifdef __APPLE__
     Sound sound = Sound("cave1.ogg");
     sound.play();
+#endif
 }
 
 Scene::~Scene() {

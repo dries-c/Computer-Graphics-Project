@@ -3,7 +3,9 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "GLFW/glfw3.h"
+#ifdef __APPLE__
 #include "../sound/SoundProvider.h"
+#endif
 #include <algorithm>
 #include <iostream>
 #include <cfloat>
@@ -113,8 +115,9 @@ void Camera::updateCameraVectors() {
     front = glm::normalize(newFront);
     right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
-
+#ifdef __APPLE__
     SoundProvider::getInstance()->updateCameraPosition(position, front, up);
+#endif
     Lighting::getInstance()->updateCameraPosition(position, front);
 }
 

@@ -4,6 +4,7 @@
 #include "DirectionalLight.h"
 #include "PointLight.h"
 #include "SpotLight.h"
+#include <vector>
 
 class Lighting {
 private:
