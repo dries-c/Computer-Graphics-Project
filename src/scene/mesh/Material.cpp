@@ -1,7 +1,9 @@
 #include "Material.h"
 
 void Material::bind(const Shader &shader) {
-    diffuseMap->bind(shader, "material.diffuse", 0);
+    if (diffuseMap != nullptr) {
+        diffuseMap->bind(shader, "material.diffuse", 0);
+    }
     if (specularMap != nullptr) {
         specularMap->bind(shader, "material.specular", 1);
     }
