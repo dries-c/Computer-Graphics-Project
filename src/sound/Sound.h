@@ -4,9 +4,9 @@
 
 #include <string>
 #include "glm/vec3.hpp"
-#ifdef __APPLE__
+
 #include "irrKlang/ik_ISound.h"
-#endif
+
 
 class Sound {
 private:
@@ -16,9 +16,9 @@ private:
     bool loop;
     bool ambient;
 
-#ifdef __APPLE__
+
     irrklang::ISound *instance;
-#endif
+
 public:
     Sound(std::string filePath, glm::vec3 position, float volume = 1.0f, bool loop = false);
     explicit Sound(std::string filePath, float volume = 1.0f, bool loop = false);

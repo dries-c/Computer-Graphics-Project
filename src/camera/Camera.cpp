@@ -3,9 +3,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "GLFW/glfw3.h"
-#ifdef __APPLE__
 #include "../sound/SoundProvider.h"
-#endif
 #include <algorithm>
 #include <iostream>
 #include <cfloat>

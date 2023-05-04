@@ -2,9 +2,9 @@
 
 #include <utility>
 #include "../utils/FileUtils.h"
-#ifdef __APPLE__
+
 #include "SoundProvider.h"
-#endif
+
 
 void Sound::play() {
     std::string path = RESOURCES_PATH + "sounds/" + filePath;

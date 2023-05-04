@@ -3,10 +3,8 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
-
-#ifdef __APPLE__
 #include "../sound/Sound.h"
-#endif
+
 
 #include <iostream>
 
@@ -61,6 +59,8 @@ void Scene::setupMaze() {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
+            
+
             if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
             } else if (position == PositionEnum::OBSTACLE) {
@@ -87,10 +87,9 @@ void Scene::setupMaze() {
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
-#ifdef __APPLE__
+
     Sound sound = Sound("cave1.ogg");
     sound.play();
-#endif
 }
 
 Scene::~Scene() {

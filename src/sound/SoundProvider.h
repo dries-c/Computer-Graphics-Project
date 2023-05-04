@@ -1,8 +1,8 @@
 #ifndef OPENGL_PROJECT_SOUNDPROVIDER_H
 #define OPENGL_PROJECT_SOUNDPROVIDER_H
-#ifdef __APPLE__
-//#include <irrklang/irrKlang.h>
-#endif
+
+#include <irrklang/irrKlang.h>
+
 
 #include "../camera/Camera.h"
 
