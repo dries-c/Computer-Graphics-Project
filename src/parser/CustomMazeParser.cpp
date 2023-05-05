@@ -48,11 +48,11 @@ void CustomMazeParser::placeLights() {
         for (int x = 1; x < width - 1; ++x) {
             if (maze[x][y] == '#') {
                 int count = 0;
-                if (maze[x + 1][y] == ' ') count++;
-                if (maze[x - 1][y] == ' ') count++;
-                if (maze[x][y + 1] == ' ') count++;
-                if (maze[x][y - 1] == ' ') count++;
-                if (count == 3) {
+                if (maze[x + 1][y] == '#') count++;
+                if (maze[x - 1][y] == '#') count++;
+                if (maze[x][y + 1] == '#') count++;
+                if (maze[x][y - 1] == '#') count++;
+                if (count >= 3) {
                     maze[x][y] = 'L';
                 }
             }
