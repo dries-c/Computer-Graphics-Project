@@ -18,6 +18,9 @@ FileMazeParser::FileMazeParser(const char *path) {
             case ' ':
                 row.push_back(PositionEnum::EMPTY);
                 break;
+            case 'L':
+                row.push_back(PositionEnum::WALL_WITH_LIGHT);
+                break;
             case '\n':
                 maze.push_back(row);
                 row.clear();

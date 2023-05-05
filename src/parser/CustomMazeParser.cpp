@@ -42,6 +42,24 @@ void CustomMazeParser::createEntranceAndExit() {
     maze[width - 1][height - 1] = ' ';
 
 }
+void CustomMazeParser::placeLights() {
+    //place lights 'L' on the place where walls are surrounded by 3 empty spaces
+    for (int y = 1; y < height - 1; ++y) {
+        for (int x = 1; x < width - 1; ++x) {
+            if (maze[x][y] == '#') {
+                int count = 0;
+                if (maze[x + 1][y] == ' ') count++;
+                if (maze[x - 1][y] == ' ') count++;
+                if (maze[x][y + 1] == ' ') count++;
+                if (maze[x][y - 1] == ' ') count++;
+                if (count == 3) {
+                    maze[x][y] = 'L';
+                }
+            }
+        }
+    }
+
+}
 
 
 void CustomMazeParser::ResetGrid() {
@@ -161,6 +179,7 @@ CustomMazeParser::CustomMazeParser(int height, int width) {
     srand(time(0)); // seed random number generator.
     ResetGrid();
     goToSpace(1, 1);
+    placeLights();
     createEntranceAndExit();
     saveGridToFile("../resources/maze/maze.txt");
     PrintGrid();
