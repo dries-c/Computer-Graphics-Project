@@ -4,6 +4,7 @@
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
 #include "../sound/Sound.h"
+#include "../parser/CustomMazeParser.h"
 
 
 #include <iostream>
@@ -49,7 +50,7 @@ void Scene::setupMaze() {
 
     std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
-    //new CustomMazeParser(29, 29);
+    new CustomMazeParser(29, 29);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
     glm::mat4 base = glm::mat4(1.0f);
@@ -59,8 +60,45 @@ void Scene::setupMaze() {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
-            
+            /*
+            if ((i == 0 && j == 0) ||
+                (i == mazeParser->getMaze().size() - 2 && j == mazeParser->getMaze()[i].size() - 1)) {
+                auto lanternMesh = modelLoader->loadMeshes("objects/lantern/Candle_lantern_OBJ.obj");
+                auto lanternModel = new Model(
+                        glm::scale(glm::translate(base, glm::vec3(i + 1, -1.0f, -j)), glm::vec3(0.001f, 0.001f, 0.001f)),
+                        new Shader("shaders/singular.vs", "shaders/shader.fs"),
+                        lanternMesh);
 
+                lanternModel->setLightSource(PointLight(
+                        glm::vec3(0.5f, 0.5f, 0.5f),
+                        glm::vec3(0.8f, 0.8f, 0.8f),
+                        glm::vec3(1.0f, 1.0f, 1.0f),
+                        1.0f,
+                        0.09f,
+                        0.032f
+                ));
+                addObject(lanternModel);
+            }
+            */
+
+            if (position == PositionEnum::WALL_WITH_LIGHT){
+                auto lanternMesh = modelLoader->loadMeshes("objects/lantern/Candle_lantern_OBJ.obj");
+                auto lanternModel = new Model(
+                        glm::scale(glm::translate(base, glm::vec3(i+0.5, 1.0f, -j+0.5)), glm::vec3(0.001f, 0.001f, 0.001f)),
+                        new Shader("shaders/singular.vs", "shaders/shader.fs"),
+                        lanternMesh);
+
+                lanternModel->setLightSource(PointLight(
+                        glm::vec3(0.01f, 0.01f, 0.01f),
+                        glm::vec3(0.5f, 0.5f, 0.5f),
+                        glm::vec3(0.10f, 0.10f, 0.10f),
+                        0.1f,
+                        0.09f,
+                        0.032f
+                ));
+                addObject(lanternModel);
+                wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
+            }
             if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
             } else if (position == PositionEnum::OBSTACLE) {
