@@ -16,7 +16,7 @@ vector<vector<char>> maze;
 
 
 //----FUNCTIONS-------------------------------------------------------
-void CustomMazeParser::saveGridToFile(char* filename) {
+void CustomMazeParser::saveGridToFile(char *filename) {
     ofstream myfile;
     myfile.open(filename);
 
@@ -42,6 +42,7 @@ void CustomMazeParser::createEntranceAndExit() {
     maze[width - 1][height - 1] = ' ';
 
 }
+
 void CustomMazeParser::placeLights() {
     //place lights 'L' on the place where walls are surrounded by 3 empty spaces
     for (int y = 1; y < height - 1; ++y) {
@@ -54,6 +55,39 @@ void CustomMazeParser::placeLights() {
                 if (maze[x][y - 1] == '#') count++;
                 if (count >= 3) {
                     maze[x][y] = 'L';
+                }
+            }
+        }
+    }
+}
+
+void CustomMazeParser::placeDoors() {
+    //place doors 'O' on the place where empty spaces are surrounded by 2 empty spaces and there is no dead end behind the door
+    //the count of doors is based on the width and height of the maze
+    //the ration is 1 door per 36 spaces
+    int count = 0;
+    int max = (width * height) / 36;
+    while (count < max) {
+        int x = rand() % width;
+        int y = rand() % height;
+        if (maze[x][y] == ' ') {
+            int count2 = 0;
+            if (maze[x + 1][y] == ' ') count2++;
+            if (maze[x - 1][y] == ' ') count2++;
+            if (maze[x][y + 1] == ' ') count2++;
+            if (maze[x][y - 1] == ' ') count2++;
+            if (count2 == 2) {
+                if (maze[x + 1][y] == ' ' && maze[x - 1][y] == ' ') {
+                    if (maze[x][y + 1] == '#' && maze[x][y - 1] == '#') {
+                        maze[x][y] = 'O';
+                        count++;
+                    }
+                }
+                if (maze[x][y + 1] == ' ' && maze[x][y - 1] == ' ') {
+                    if (maze[x + 1][y] == '#' && maze[x - 1][y] == '#') {
+                        maze[x][y] = 'O';
+                        count++;
+                    }
                 }
             }
         }
@@ -140,6 +174,7 @@ void CustomMazeParser::PrintGrid() {
         cout << endl;
     }
 }
+
 void CustomMazeParser::checkHeightAndWidth(int height, int width) {
     //make sure height and width are odd
     if (height % 2 == 0 || width % 2 == 0) {
@@ -179,8 +214,9 @@ CustomMazeParser::CustomMazeParser(int height, int width) {
     srand(time(0)); // seed random number generator.
     ResetGrid();
     goToSpace(1, 1);
-    placeLights();
+    placeDoors();
     createEntranceAndExit();
+    placeLights();
     saveGridToFile("../resources/maze/maze.txt");
     PrintGrid();
 

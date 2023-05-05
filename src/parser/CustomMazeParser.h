@@ -23,6 +23,7 @@ private:
 public:
     CustomMazeParser(int height, int width);
 
+    void placeDoors();
 };
 
 
