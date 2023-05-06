@@ -1,7 +1,6 @@
 #include "Lighting.h"
-
-#define M_PI   3.14159265358979323846264338327950288
-
+#define _USE_MATH_DEFINES
+#include <cmath>
 
 Lighting *Lighting::instance = nullptr;
 
@@ -17,7 +16,7 @@ Lighting::Lighting() {
             glm::vec3(1.0f, 1.0f, 1.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             cos(12.5f * M_PI / 180.0f),
-            cos(15.0f * M_PI / 180.0f),
+            cos(25.0f * M_PI / 180.0f),
             1.0f,
             0.09f,
             0.032f

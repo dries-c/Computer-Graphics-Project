@@ -1,5 +1,4 @@
 #include "Camera.h"
-
 #include "glm/ext/matrix_transform.hpp"
 #include "glm/ext/matrix_clip_space.hpp"
 #include "GLFW/glfw3.h"
@@ -61,7 +60,6 @@ void Camera::processKeyboard(Input direction) {
 void Camera::processKeyboard(FreeCamControls control) {
     switch (control) {
         case FreeCamControls::TOGGLE_FREECAM:
-
             if (glfwGetTime() - freeCamToggleTime > FREE_CAM_TOGGLE_DELAY) {
                 setHasGravity(!hasGravity);
                 //stop falling or jumping
@@ -116,9 +114,8 @@ void Camera::updateCameraVectors() {
     front = glm::normalize(newFront);
     right = glm::normalize(glm::cross(front, worldUp));
     up = glm::normalize(glm::cross(right, front));
-#ifdef __APPLE__
+
     SoundProvider::getInstance()->updateCameraPosition(position, front, up);
-#endif
     Lighting::getInstance()->updateCameraPosition(position, front);
 }
 

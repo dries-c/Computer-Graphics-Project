@@ -5,19 +5,15 @@
 #include "model/InteractableModel.h"
 #include "../sound/Sound.h"
 #include "../parser/CustomMazeParser.h"
-
-
 #include <iostream>
 
-void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix, float deltaTime) {
+void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
     for (Entity *entity: entities) {
         if (auto *interactable = dynamic_cast<Interactable *>(entity)) {
             if (!interactable->isAlive()) {
                 continue;
             }
         }
-
-        entity->doPhysics(deltaTime, getBoundingBoxes());
 
         auto model = entity->getModel();
         if (model != nullptr) {
@@ -50,56 +46,23 @@ void Scene::setupMaze() {
 
     std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
+    std::vector<Mesh *> lanternMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
     new CustomMazeParser(29, 29);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
 
-    glm::mat4 base = glm::mat4(1.0f);
+    glm::mat4 base = glm::mat4(1.0f);;
     std::vector<glm::mat4> floorMatrices = {};
     std::vector<glm::mat4> wallMatrices = {};
+    std::vector<glm::mat4> lanternMatrices = {};
     for (int i = 0; i < mazeParser->getMaze().size(); i++) {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
-            /*
-            if ((i == 0 && j == 0) ||
-                (i == mazeParser->getMaze().size() - 2 && j == mazeParser->getMaze()[i].size() - 1)) {
-                auto lanternMesh = modelLoader->loadMeshes("objects/lantern/Candle_lantern_OBJ.obj");
-                auto lanternModel = new Model(
-                        glm::scale(glm::translate(base, glm::vec3(i + 1, -1.0f, -j)), glm::vec3(0.001f, 0.001f, 0.001f)),
-                        new Shader("shaders/singular.vs", "shaders/shader.fs"),
-                        lanternMesh);
-
-                lanternModel->setLightSource(PointLight(
-                        glm::vec3(0.5f, 0.5f, 0.5f),
-                        glm::vec3(0.8f, 0.8f, 0.8f),
-                        glm::vec3(1.0f, 1.0f, 1.0f),
-                        1.0f,
-                        0.09f,
-                        0.032f
-                ));
-                addObject(lanternModel);
-            }
-            */
-
             if (position == PositionEnum::WALL_WITH_LIGHT){
-                auto lanternMesh = modelLoader->loadMeshes("objects/lantern/Candle_lantern_OBJ.obj");
-                auto lanternModel = new Model(
-                        glm::scale(glm::translate(base, glm::vec3(i+0.5, 1.0f, -j+0.5)), glm::vec3(0.001f, 0.001f, 0.001f)),
-                        new Shader("shaders/singular.vs", "shaders/shader.fs"),
-                        lanternMesh);
-
-                lanternModel->setLightSource(PointLight(
-                        glm::vec3(0.01f, 0.01f, 0.01f),
-                        glm::vec3(0.5f, 0.5f, 0.5f),
-                        glm::vec3(0.10f, 0.10f, 0.10f),
-                        0.1f,
-                        0.09f,
-                        0.032f
-                ));
-                addObject(lanternModel);
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 1.5f, -j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                lanternMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
-            }
-            if (position == PositionEnum::WALL) {
+            } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
@@ -107,14 +70,6 @@ void Scene::setupMaze() {
                 auto model = new InteractableModel(glm::translate(base, glm::vec3(i, -1.0f, -j)),
                                                    new Shader("shaders/singular.vs", "shaders/shader.fs"),
                                                    obstacleMesh);
-                model->setLightSource(PointLight(
-                        glm::vec3(0.05f, 0.05f, 0.05f),
-                        glm::vec3(0.8f, 0.8f, 0.8f),
-                        glm::vec3(1.0f, 1.0f, 1.0f),
-                        1.0f,
-                        0.09f,
-                        0.032f
-                ));
                 addObject(model);
             }
 
@@ -125,6 +80,16 @@ void Scene::setupMaze() {
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
+    auto lanternModel = new Model(lanternMatrices,new Shader("shaders/instanced.vs", "shaders/shader.fs"), lanternMeshes);
+    lanternModel->setLightSource(PointLight(
+            glm::vec3(0.01f, 0.01f, 0.01f),
+            glm::vec3(0.5f, 0.5f, 0.5f),
+            glm::vec3(0.10f, 0.10f, 0.10f),
+            0.1f,
+            0.09f,
+            0.032f
+    ));
+    addObject(lanternModel);
 
     Sound sound = Sound("cave1.ogg");
     sound.play();
@@ -168,6 +133,18 @@ std::vector<AxisAlignedBB> Scene::getBoundingBoxes() {
     }
 
     return boundingBoxes;
+}
+
+void Scene::doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes) {
+    for (Entity *entity: entities) {
+        if (auto *interactable = dynamic_cast<Interactable *>(entity)) {
+            if (!interactable->isAlive()) {
+                continue;
+            }
+        }
+
+        entity->doPhysics(deltaTime, boundingBoxes);
+    }
 }
 
 void Scene::addEntity(Entity *entity) {

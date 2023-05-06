@@ -1,10 +1,7 @@
 #include "Sound.h"
-
 #include <utility>
 #include "../utils/FileUtils.h"
-
 #include "SoundProvider.h"
-
 
 void Sound::play() {
     std::string path = RESOURCES_PATH + "sounds/" + filePath;

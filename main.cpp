@@ -35,7 +35,10 @@ int main() {
 
         auto camera = Camera::getInstance();
         processInput(camera, window);
-        camera->doPhysics(deltaTime, scene->getBoundingBoxes());
+
+        auto boundingBoxes = scene->getBoundingBoxes();
+        scene->doPhysics(deltaTime, boundingBoxes);
+        camera->doPhysics(deltaTime, boundingBoxes);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -43,7 +46,7 @@ int main() {
         glm::mat4 viewMatrix = camera->getViewMatrix();
         glm::mat4 projectionMatrix = camera->getProjectionMatrix();
 
-        scene->render(viewMatrix, projectionMatrix, deltaTime);
+        scene->render(viewMatrix, projectionMatrix);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
