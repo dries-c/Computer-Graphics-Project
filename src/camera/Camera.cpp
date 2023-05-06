@@ -44,13 +44,13 @@ void Camera::processKeyboard(Input direction) {
             if (hasGravity) {
                 jump();
             } else {
-                position.y += FREE_CAM_SPEED / 500;
+                position.y += up.y*speed / 20;
             }
         }
             break;
         case Input::INPUT_DOWN: {
             if (!hasGravity) {
-                position.y -= FREE_CAM_SPEED / 500;
+                position.y -= up.y*speed / 20;
             }
         }
             break;
@@ -64,26 +64,29 @@ void Camera::processKeyboard(FreeCamControls control) {
 
             if (glfwGetTime() - freeCamToggleTime > FREE_CAM_TOGGLE_DELAY) {
                 setHasGravity(!hasGravity);
+                //stop falling or jumping
+                velocity.y = 0;
+
                 freeCamToggleTime = glfwGetTime();
             }
             break;
         case FreeCamControls::FASTER_FREECAM:
             if (!hasGravity) {
                 //Add speed to free camera
-                FREE_CAM_SPEED += 0.01f;
+                FREE_CAM_SPEED += 0.1f;
             }
             break;
         case FreeCamControls::SLOWER_FREECAM:
             if (!hasGravity) {
                 //Subtract speed from free camera make sure it's at least 0.05
-                FREE_CAM_SPEED -= 0.01f;
-                FREE_CAM_SPEED = fmax(FREE_CAM_SPEED, 0.05f);
+                FREE_CAM_SPEED -= 0.1f;
+                FREE_CAM_SPEED = fmax(FREE_CAM_SPEED, 0.5f);
             }
             break;
         case FreeCamControls::RESET_SPEED_FREECAM:
             if (!hasGravity) {
                 //Set speed to default
-                FREE_CAM_SPEED = 2.0f;
+                FREE_CAM_SPEED = 3.0f;
             }
             break;
     }
