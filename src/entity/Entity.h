@@ -18,7 +18,7 @@ protected:
 
     bool onGround = false;
     bool wasOnGround = false;
-    bool hasGravity = true;
+    bool hasGravity = false;
     Model *model = nullptr;
 
     float yaw;
