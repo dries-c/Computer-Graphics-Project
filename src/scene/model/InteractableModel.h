@@ -7,8 +7,6 @@
 class InteractableModel : public Model, public Interactable {
 public:
     InteractableModel(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes) : Model(modelMatrix, shader, meshes) {};
-    void onAttack() override;
-    void onInteract() override;
     std::vector<AxisAlignedBB> getBoundingBoxes() const override;
     glm::mat4 getModelMatrix() const override;
 };
