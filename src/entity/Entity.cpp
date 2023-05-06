@@ -16,6 +16,7 @@ void Entity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &collid
 
     position += velocity * deltaTime;
 
+    wasOnGround = onGround;
     onGround = false;
     AxisAlignedBB bb = getBoundingBox();
     for (const auto &collider: colliders) {

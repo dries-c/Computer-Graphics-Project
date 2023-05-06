@@ -17,6 +17,7 @@ protected:
     AxisAlignedBB boundingBox;
 
     bool onGround = false;
+    bool wasOnGround = false;
     bool hasGravity = true;
     Model *model = nullptr;
 

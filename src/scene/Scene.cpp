@@ -5,6 +5,7 @@
 #include "model/InteractableModel.h"
 #include "../sound/Sound.h"
 #include "../parser/CustomMazeParser.h"
+#include "model/Obstacle.h"
 #include <iostream>
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
@@ -67,7 +68,7 @@ void Scene::setupMaze() {
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
-                auto model = new InteractableModel(glm::translate(base, glm::vec3(i, -1.0f, -j)),
+                auto model = new Obstacle(glm::translate(base, glm::vec3(i, -1.0f, -j)),
                                                    new Shader("shaders/singular.vs", "shaders/shader.fs"),
                                                    obstacleMesh);
                 addObject(model);
@@ -91,7 +92,7 @@ void Scene::setupMaze() {
     ));
     addObject(lanternModel);
 
-    Sound sound = Sound("cave1.ogg");
+    Sound sound = Sound("startup.ogg");
     sound.play();
 }
 

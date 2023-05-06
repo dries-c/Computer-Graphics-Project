@@ -8,6 +8,7 @@
 #include "../utils/AxisAlignedBB.h"
 #include "../entity/Entity.h"
 #include "../utils/Interactable.h"
+#include "../sound/Sound.h"
 #include <string>
 
 #define SPEED 3.0f
@@ -23,6 +24,8 @@ private:
     glm::vec3 up{};
     glm::vec3 right{};
     glm::vec3 worldUp{};
+
+    Sound* walkSound;
 
     float FREE_CAM_SPEED = 3.0f;
     double freeCamToggleTime = 0.0f;

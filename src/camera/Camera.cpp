@@ -3,6 +3,7 @@
 #include "glm/ext/matrix_clip_space.hpp"
 #include "GLFW/glfw3.h"
 #include "../sound/SoundProvider.h"
+#include "../sound/Sound.h"
 #include <algorithm>
 #include <iostream>
 #include <cfloat>
@@ -43,13 +44,13 @@ void Camera::processKeyboard(Input direction) {
             if (hasGravity) {
                 jump();
             } else {
-                position.y += up.y*speed / 20;
+                position.y += up.y * speed / 20;
             }
         }
             break;
         case Input::INPUT_DOWN: {
             if (!hasGravity) {
-                position.y -= up.y*speed / 20;
+                position.y -= up.y * speed / 20;
             }
         }
             break;
@@ -181,8 +182,24 @@ void Camera::interact(const std::vector<Interactable *> &interactables) {
 }
 
 void Camera::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
+    bool isMoving = velocity.x > 0 || velocity.z > 0;
+
     Entity::doPhysics(deltaTime, colliders);
     updateCameraVectors();
+
+    if (onGround) {
+        if (wasOnGround) {
+            if (isMoving && (walkSound == nullptr || !walkSound->isPlaying())) {
+                delete walkSound;
+                walkSound = new Sound("walk/grass" + std::to_string(rand() % 6 + 1) + ".ogg");
+                walkSound->play();
+            }
+        } else {
+            Sound sound = Sound("fall.ogg");
+            sound.play();
+        }
+    }
+
 }
 
 void Camera::setPosition(glm::vec3 position) {
