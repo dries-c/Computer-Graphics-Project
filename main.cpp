@@ -37,7 +37,7 @@ int main() {
         processInput(camera, window);
 
         auto boundingBoxes = scene->getBoundingBoxes();
-        scene->doPhysics(deltaTime, boundingBoxes);
+        scene->doPhysics(deltaTime, boundingBoxes, camera->getPosition());
         camera->doPhysics(deltaTime, boundingBoxes);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);

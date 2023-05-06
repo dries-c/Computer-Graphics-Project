@@ -44,7 +44,7 @@ public:
 
     void operator=(const Camera &) = delete;
 
-    static Camera *getInstance(glm::vec3 position = glm::vec3(0.1f, 0.1f, 0.1f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = -45.0f, float pitch = 0.0f);
+    static Camera *getInstance(glm::vec3 position = glm::vec3(0.5f, 0.8f, 0.5f), glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f), float yaw = 45.0f, float pitch = 0.0f);
 
     void doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) override;
 

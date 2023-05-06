@@ -15,7 +15,7 @@ public:
     [[nodiscard]] bool isAlive() const { return alive; }
     void kill() {
         alive = false;
-        Sound sound = Sound("stone4.ogg");
+        Sound sound = Sound("break.ogg");
         sound.play();
     }
     [[nodiscard]] virtual std::vector<AxisAlignedBB> getBoundingBoxes() const = 0;

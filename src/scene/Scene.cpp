@@ -3,10 +3,13 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
-#include "../sound/Sound.h"
 #include "../parser/CustomMazeParser.h"
 #include "model/Obstacle.h"
+#include "GLFW/glfw3.h"
+#include "../entity/AIEntity.h"
 #include <iostream>
+
+#define PATH_FINDING_INTERVAL 0.5f
 
 void Scene::render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix) {
     for (Entity *entity: entities) {
@@ -40,6 +43,15 @@ void Scene::addObject(Model *object) {
 Scene::Scene() {
     setupSkybox();
     setupMaze();
+    setupEntities();
+}
+
+void Scene::setupEntities() {
+    ModelLoader *modelLoader = ModelLoader::getInstance();
+    auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f), AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f, 0.0f);
+    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"),  modelLoader->loadMeshes("objects/zombie/zombie.geo.obj"));
+    aiEntity->setModel(aiModel);
+    addEntity(aiEntity);
 }
 
 void Scene::setupMaze() {
@@ -50,6 +62,7 @@ void Scene::setupMaze() {
     std::vector<Mesh *> lanternMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
     new CustomMazeParser(29, 29);
     MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
+    pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());
 
     glm::mat4 base = glm::mat4(1.0f);;
     std::vector<glm::mat4> floorMatrices = {};
@@ -60,21 +73,21 @@ void Scene::setupMaze() {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
             if (position == PositionEnum::WALL_WITH_LIGHT){
-                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 1.5f, -j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 2.5f, j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 lanternMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
-                wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
+                wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::WALL) {
-                wallMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
+                wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
-                auto model = new Obstacle(glm::translate(base, glm::vec3(i, -1.0f, -j)),
+                auto model = new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j)),
                                                    new Shader("shaders/singular.vs", "shaders/shader.fs"),
                                                    obstacleMesh);
                 addObject(model);
             }
 
-            floorMatrices.push_back(glm::translate(base, glm::vec3(i, -1.0f, -j)));
+            floorMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
         }
     }
 
@@ -102,6 +115,7 @@ Scene::~Scene() {
     }
 
     delete skybox;
+    delete pathFinding;
 
     std::cout << "Scene destroyed" << std::endl;
 }
@@ -136,7 +150,9 @@ std::vector<AxisAlignedBB> Scene::getBoundingBoxes() {
     return boundingBoxes;
 }
 
-void Scene::doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes) {
+void Scene::doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes, glm::vec3 cameraPosition) {
+    bool updatePathFinding = lastPathUpdate + PATH_FINDING_INTERVAL < glfwGetTime();
+
     for (Entity *entity: entities) {
         if (auto *interactable = dynamic_cast<Interactable *>(entity)) {
             if (!interactable->isAlive()) {
@@ -144,7 +160,17 @@ void Scene::doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes)
             }
         }
 
+        if (updatePathFinding) {
+            if (auto aiEntity = dynamic_cast<AIEntity *>(entity)) {
+                aiEntity->updatePath(pathFinding, cameraPosition);
+            }
+        }
+
         entity->doPhysics(deltaTime, boundingBoxes);
+    }
+
+    if (updatePathFinding) {
+        lastPathUpdate = glfwGetTime();
     }
 }
 

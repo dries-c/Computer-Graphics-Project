@@ -8,6 +8,7 @@
 #include "../utils/Interactable.h"
 #include "../entity/Entity.h"
 #include "lighting/Lighting.h"
+#include "../utils/PathFindingAlgorithm.h"
 
 class Scene {
 public:
@@ -16,7 +17,7 @@ public:
     ~Scene();
 
     void render(glm::mat4 &viewMatrix, glm::mat4 &projectionMatrix);
-    void doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes);
+    void doPhysics(float deltaTime, std::vector<AxisAlignedBB> boundingBoxes, glm::vec3 cameraPosition);
 
     std::vector<AxisAlignedBB> getBoundingBoxes();
     std::vector<Interactable *> getInteractables();
@@ -25,11 +26,14 @@ private:
     std::vector<Model *> objects;
     std::vector<Entity *> entities;
     Skybox *skybox;
+    PathFindingAlgorithm *pathFinding;
+    float lastPathUpdate = 0.0f;
 
     void addObject(Model *object);
     void addEntity(Entity *entity);
     void setupMaze();
     void setupSkybox();
+    void setupEntities();
 };
 
 #endif

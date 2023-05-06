@@ -11,6 +11,7 @@ protected:
 
 public:
     std::vector<std::vector<PositionEnum>> getMaze();
+    std::vector<std::vector<bool>> getWalkableMaze();
 };
 
 
