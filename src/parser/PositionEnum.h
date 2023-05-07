@@ -5,7 +5,7 @@ enum PositionEnum {
     EMPTY,
     WALL,
     OBSTACLE,
-    WALL_WITH_LIGHT
+    LIGHT
 };
 
 #endif

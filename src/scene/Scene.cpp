@@ -71,10 +71,9 @@ void Scene::setupMaze() {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
-            if (position == PositionEnum::WALL_WITH_LIGHT){
-                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 2.5f, j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            if (position == PositionEnum::LIGHT){
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.132f, j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 lanternMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
-                wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::OBSTACLE) {

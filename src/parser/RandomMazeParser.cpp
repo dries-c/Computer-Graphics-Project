@@ -52,6 +52,22 @@ void RandomMazeParser::createEntranceAndExit() {
 }
 
 void RandomMazeParser::placeLights() {
+    //place lights 'L' in all T shaped crossroads
+    for (int i = 1; i < width - 1; i++) {
+        for (int j = 1; j < height - 1; j++) {
+            if (char_maze[i][j] == ' ') {
+                int count = 0;
+                if (char_maze[i + 1][j] == ' ') count++;
+                if (char_maze[i - 1][j] == ' ') count++;
+                if (char_maze[i][j + 1] == ' ') count++;
+                if (char_maze[i][j - 1] == ' ') count++;
+                if (count == 3) {
+                    char_maze[i][j] = 'L';
+                }
+            }
+        }
+    }
+    /* CAUTION CHANGE ENUM TO WALL WITH LIGHT
     //place lights 'L' on the place where walls are surrounded by 3 empty spaces
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
@@ -67,6 +83,7 @@ void RandomMazeParser::placeLights() {
             }
         }
     }
+     */
 }
 
 void RandomMazeParser::placeDoors() {
@@ -224,7 +241,7 @@ void RandomMazeParser::fileMazeParser(const char *filename) {
                 row.push_back(PositionEnum::EMPTY);
                 break;
             case 'L':
-                row.push_back(PositionEnum::WALL_WITH_LIGHT);
+                row.push_back(PositionEnum::LIGHT);
                 break;
             case '\n':
                 maze.push_back(row);
