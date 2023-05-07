@@ -7,7 +7,7 @@
 #include "../utils/Interactable.h"
 
 #define GRAVITY 9.81f
-#define JUMP_SPEED 4.5f
+#define JUMP_SPEED 3.0f
 
 class Entity : public Interactable {
 protected:

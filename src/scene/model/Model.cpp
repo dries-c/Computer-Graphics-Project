@@ -35,11 +35,11 @@ void Model::setupInstancing() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Model::Model(const glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes) : Model(
-        std::vector<glm::mat4>{modelMatrix}, shader, meshes) {}
+Model::Model(const glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes, bool collision) : Model(
+        std::vector<glm::mat4>{modelMatrix}, shader, meshes, collision) {}
 
-Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes)
-        : modelMatrices(modelMatrices), shader(shader), meshes(meshes) {
+Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes, bool collision)
+        : modelMatrices(modelMatrices), shader(shader), meshes(meshes), collision(collision) {
     if (modelMatrices.size() > 1) {
         setupInstancing();
     }

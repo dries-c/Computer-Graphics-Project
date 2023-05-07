@@ -92,7 +92,7 @@ void Scene::setupMaze() {
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
-    auto lanternModel = new Model(lanternMatrices,new Shader("shaders/instanced.vs", "shaders/shader.fs"), lanternMeshes);
+    auto lanternModel = new Model(lanternMatrices,new Shader("shaders/instanced.vs", "shaders/shader.fs"), lanternMeshes, false);
     lanternModel->setLightSource(PointLight(
             glm::vec3(0.01f, 0.01f, 0.01f),
             glm::vec3(0.5f, 0.5f, 0.5f),

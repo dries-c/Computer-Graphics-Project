@@ -6,7 +6,7 @@
 
 class InteractableModel : public Model, public Interactable {
 public:
-    InteractableModel(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes) : Model(modelMatrix, shader, meshes) {};
+    InteractableModel(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes, bool collision = true) : Model(modelMatrix, shader, meshes, collision) {};
     std::vector<AxisAlignedBB> getBoundingBoxes() const override;
     glm::mat4 getModelMatrix() const override;
 };
