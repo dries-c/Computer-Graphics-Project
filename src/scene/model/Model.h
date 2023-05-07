@@ -17,13 +17,14 @@ protected:
     Shader *shader;
     std::vector<PointLight *> lightSources;
     unsigned int buffer{};
+    bool collision;
 
 public:
     virtual ~Model();
 
-    Model(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes);
+    Model(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes, bool collision = true);
 
-    Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes);
+    Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes, bool collision = true);
 
     virtual void render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix);
 

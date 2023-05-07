@@ -35,11 +35,11 @@ void Model::setupInstancing() {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-Model::Model(const glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes) : Model(
-        std::vector<glm::mat4>{modelMatrix}, shader, meshes) {}
+Model::Model(const glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes, bool collision) : Model(
+        std::vector<glm::mat4>{modelMatrix}, shader, meshes, collision) {}
 
-Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes)
-        : modelMatrices(modelMatrices), shader(shader), meshes(meshes) {
+Model::Model(const std::vector<glm::mat4> &modelMatrices, Shader *shader, const std::vector<Mesh *> &meshes, bool collision)
+        : modelMatrices(modelMatrices), shader(shader), meshes(meshes), collision(collision) {
     if (modelMatrices.size() > 1) {
         setupInstancing();
     }
@@ -50,7 +50,7 @@ Model::~Model() {
         delete mesh;
     }
 
-    for(PointLight *lightSource: lightSources) {
+    for (PointLight *lightSource: lightSources) {
         delete lightSource;
     }
 
@@ -69,6 +69,10 @@ std::vector<glm::mat4> Model::getModelMatrices() const {
 }
 
 std::vector<AxisAlignedBB> Model::getBoundingBoxes(const glm::mat4 &modelMatrix) const {
+    if (!collision) {
+        return {};
+    }
+
     std::vector<AxisAlignedBB> boundingBoxes = {};
     boundingBoxes.reserve(meshes.size());
 
