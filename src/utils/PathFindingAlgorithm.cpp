@@ -1,7 +1,6 @@
 #include "PathFindingAlgorithm.h"
 #include "glm/geometric.hpp"
 
-#include <queue>
 #include <stack>
 
 PathFindingAlgorithm::PathFindingAlgorithm(std::vector<std::vector<bool>> walkableMaze) : walkableMaze(

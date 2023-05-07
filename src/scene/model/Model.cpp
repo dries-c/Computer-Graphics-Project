@@ -50,7 +50,7 @@ Model::~Model() {
         delete mesh;
     }
 
-    for(PointLight *lightSource: lightSources) {
+    for (PointLight *lightSource: lightSources) {
         delete lightSource;
     }
 
@@ -69,6 +69,10 @@ std::vector<glm::mat4> Model::getModelMatrices() const {
 }
 
 std::vector<AxisAlignedBB> Model::getBoundingBoxes(const glm::mat4 &modelMatrix) const {
+    if (!collision) {
+        return {};
+    }
+
     std::vector<AxisAlignedBB> boundingBoxes = {};
     boundingBoxes.reserve(meshes.size());
 
