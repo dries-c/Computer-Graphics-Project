@@ -1,12 +1,12 @@
 
 
-#ifndef OPENGL_PROJECT_CUSTOMMAZEPARSER_H
-#define OPENGL_PROJECT_CUSTOMMAZEPARSER_H
+#ifndef OPENGL_PROJECT_RANDOMMAZEPARSER_H
+#define OPENGL_PROJECT_RANDOMMAZEPARSER_H
 
 #include "MazeParser.h"
 
 
-class CustomMazeParser : public MazeParser {
+class RandomMazeParser : public MazeParser {
 private:
     int height;
     int width;
@@ -25,10 +25,10 @@ private:
 
 
 public:
-    explicit CustomMazeParser(int height, int width, const char* fileName);
+    explicit RandomMazeParser(int height, int width, const char* fileName);
 
     void placeDoors();
 };
 
 
-#endif //OPENGL_PROJECT_CUSTOMMAZEPARSER_H
+#endif //OPENGL_PROJECT_RANDOMMAZEPARSER_H

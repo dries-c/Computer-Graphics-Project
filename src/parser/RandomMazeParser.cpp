@@ -1,4 +1,4 @@
-#include "CustomMazeParser.h"
+#include "RandomMazeParser.h"
 #include <iostream>
 #include <fstream>
 #include <vector>
@@ -18,7 +18,7 @@ vector<vector<char>> char_maze;
 
 
 //----FUNCTIONS-------------------------------------------------------
-void CustomMazeParser::saveMazeToFile(const char *filename) {
+void RandomMazeParser::saveMazeToFile(const char *filename) {
     ofstream myfile;
     //open the file with path "../resources/filename"
     myfile.open("../resources/" + string(filename));
@@ -40,7 +40,7 @@ void CustomMazeParser::saveMazeToFile(const char *filename) {
 
 }
 
-void CustomMazeParser::createEntranceAndExit() {
+void RandomMazeParser::createEntranceAndExit() {
     // Create an entrance and exit.
     char_maze[0][1] = ' ';
     char_maze[0][0] = ' ';
@@ -51,7 +51,7 @@ void CustomMazeParser::createEntranceAndExit() {
 
 }
 
-void CustomMazeParser::placeLights() {
+void RandomMazeParser::placeLights() {
     //place lights 'L' on the place where walls are surrounded by 3 empty spaces
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
@@ -69,7 +69,7 @@ void CustomMazeParser::placeLights() {
     }
 }
 
-void CustomMazeParser::placeDoors() {
+void RandomMazeParser::placeDoors() {
     //place doors 'O' on the place where empty spaces are surrounded by 2 empty spaces and there is no dead end behind the door
     //the count of doors is based on the width and height of the maze
     //the ration is 1 door per 36 spaces
@@ -104,7 +104,7 @@ void CustomMazeParser::placeDoors() {
 }
 
 
-void CustomMazeParser::ResetMaze() {
+void RandomMazeParser::ResetMaze() {
 
     //make maze 2d vector of chars with height and width
     vector<char> row(width, '#');
@@ -113,7 +113,7 @@ void CustomMazeParser::ResetMaze() {
     }
 }
 
-int CustomMazeParser::IsInBounds(int x, int y) {
+int RandomMazeParser::IsInBounds(int x, int y) {
     // Returns "true" if x and y are both in-bounds.
     if (x < 0 || x >= width) return false;
     if (y < 0 || y >= height) return false;
@@ -121,7 +121,7 @@ int CustomMazeParser::IsInBounds(int x, int y) {
 }
 
 // This is the recursive function we will code in the next project
-void CustomMazeParser::goToSpace(int x, int y) {
+void RandomMazeParser::goToSpace(int x, int y) {
     // Starting at the given index, recursively visits every direction in a
     // randomized order.
     // Set my current location to be an empty passage.
@@ -173,7 +173,7 @@ void CustomMazeParser::goToSpace(int x, int y) {
     }
 }
 
-void CustomMazeParser::PrintMaze() {
+void RandomMazeParser::PrintMaze() {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
@@ -183,7 +183,7 @@ void CustomMazeParser::PrintMaze() {
     }
 }
 
-void CustomMazeParser::checkHeightAndWidth(int height, int width) {
+void RandomMazeParser::checkHeightAndWidth(int height, int width) {
     //make sure height and width are odd
     if (height % 2 == 0 || width % 2 == 0) {
         cout << "Height and width must be odd numbers" << endl;
@@ -207,7 +207,7 @@ void CustomMazeParser::checkHeightAndWidth(int height, int width) {
 
 }
 
-void CustomMazeParser::fileMazeParser(const char *filename) {
+void RandomMazeParser::fileMazeParser(const char *filename) {
 
     std::string mazeBuffer = FileUtils::getFileContents(filename);
 
@@ -239,7 +239,7 @@ void CustomMazeParser::fileMazeParser(const char *filename) {
     std::cout << "Maze loaded" << std::endl;
 }
 
-CustomMazeParser::CustomMazeParser(int height, int width, const char *fileName) {
+RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) {
 
     checkHeightAndWidth(height, width);
     this->height = height;

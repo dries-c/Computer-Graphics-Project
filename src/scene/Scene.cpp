@@ -2,7 +2,7 @@
 #include "../utils/ModelLoader.h"
 #include "glm/ext/matrix_transform.hpp"
 #include "model/InteractableModel.h"
-#include "../parser/CustomMazeParser.h"
+#include "../parser/RandomMazeParser.h"
 #include "model/Obstacle.h"
 #include "GLFW/glfw3.h"
 #include "../entity/AIEntity.h"
@@ -60,7 +60,7 @@ void Scene::setupMaze() {
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
     std::vector<Mesh *> lanternMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
 
-    MazeParser *mazeParser = new CustomMazeParser(29, 29, "maze/maze.txt");
+    MazeParser *mazeParser = new RandomMazeParser(29, 29, "maze/maze.txt");
     pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());
 
     glm::mat4 base = glm::mat4(1.0f);;
