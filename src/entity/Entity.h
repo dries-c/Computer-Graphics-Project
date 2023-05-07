@@ -20,11 +20,11 @@ protected:
     bool wasOnGround = false;
     bool hasGravity = false;
     Model *model = nullptr;
-
+    int health;
     float yaw;
     float pitch;
 public:
-    explicit Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch);
+    explicit Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch, int health = 10);
 
     void setModel(Model *model);
 
