@@ -25,7 +25,7 @@ private:
     glm::vec3 right{};
     glm::vec3 worldUp{};
 
-    Sound* walkSound;
+    Sound* walkSound = nullptr;
 
     float FREE_CAM_SPEED = 3.0f;
     double freeCamToggleTime = 0.0f;
