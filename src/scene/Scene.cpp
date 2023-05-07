@@ -48,7 +48,9 @@ Scene::Scene() {
 void Scene::setupEntities() {
     ModelLoader *modelLoader = ModelLoader::getInstance();
     auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f), AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f, 0.0f);
-    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"),  modelLoader->loadMeshes("objects/zombie/zombie.geo.obj"));
+    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/zombie/Scared_ghost.obj");
+
+    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"),  meshes);
     aiEntity->setModel(aiModel);
     addEntity(aiEntity);
 }
