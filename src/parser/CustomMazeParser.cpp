@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include "../utils/FileUtils.h"
+#include "PositionEnum.h"
 
 using namespace std;
 //----CONSTANTS-------------------------------------------------------
@@ -12,19 +14,25 @@ using namespace std;
 #define SOUTH 2
 #define WEST 3
 //----GLOBAL VARIABLES------------------------------------------------
-vector<vector<char>> maze;
+vector<vector<char>> char_maze;
 
 
 //----FUNCTIONS-------------------------------------------------------
-void CustomMazeParser::saveGridToFile(char *filename) {
+void CustomMazeParser::saveMazeToFile(const char *filename) {
     ofstream myfile;
-    myfile.open(filename);
+    //open the file with path "../resources/filename"
+    myfile.open("../resources/" + string(filename));
 
+    //check if the file is open
+    if (!myfile.is_open()) {
+        cout << "Error opening file";
+        exit(1);
+    }
 
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            myfile << maze[x][y];
+            myfile << char_maze[x][y];
         }
         myfile << endl;
     }
@@ -34,12 +42,12 @@ void CustomMazeParser::saveGridToFile(char *filename) {
 
 void CustomMazeParser::createEntranceAndExit() {
     // Create an entrance and exit.
-    maze[0][1] = ' ';
-    maze[0][0] = ' ';
-    maze[1][0] = ' ';
-    maze[width - 1][height - 2] = ' ';
-    maze[width - 2][height - 1] = ' ';
-    maze[width - 1][height - 1] = ' ';
+    char_maze[0][1] = ' ';
+    char_maze[0][0] = ' ';
+    char_maze[1][0] = ' ';
+    char_maze[width - 1][height - 2] = ' ';
+    char_maze[width - 2][height - 1] = ' ';
+    char_maze[width - 1][height - 1] = ' ';
 
 }
 
@@ -47,14 +55,14 @@ void CustomMazeParser::placeLights() {
     //place lights 'L' on the place where walls are surrounded by 3 empty spaces
     for (int y = 1; y < height - 1; ++y) {
         for (int x = 1; x < width - 1; ++x) {
-            if (maze[x][y] == '#') {
+            if (char_maze[x][y] == '#') {
                 int count = 0;
-                if (maze[x + 1][y] == '#') count++;
-                if (maze[x - 1][y] == '#') count++;
-                if (maze[x][y + 1] == '#') count++;
-                if (maze[x][y - 1] == '#') count++;
+                if (char_maze[x + 1][y] == '#') count++;
+                if (char_maze[x - 1][y] == '#') count++;
+                if (char_maze[x][y + 1] == '#') count++;
+                if (char_maze[x][y - 1] == '#') count++;
                 if (count >= 3) {
-                    maze[x][y] = 'L';
+                    char_maze[x][y] = 'L';
                 }
             }
         }
@@ -70,22 +78,22 @@ void CustomMazeParser::placeDoors() {
     while (count < max) {
         int x = rand() % width;
         int y = rand() % height;
-        if (maze[x][y] == ' ') {
+        if (char_maze[x][y] == ' ') {
             int count2 = 0;
-            if (maze[x + 1][y] == ' ') count2++;
-            if (maze[x - 1][y] == ' ') count2++;
-            if (maze[x][y + 1] == ' ') count2++;
-            if (maze[x][y - 1] == ' ') count2++;
+            if (char_maze[x + 1][y] == ' ') count2++;
+            if (char_maze[x - 1][y] == ' ') count2++;
+            if (char_maze[x][y + 1] == ' ') count2++;
+            if (char_maze[x][y - 1] == ' ') count2++;
             if (count2 == 2) {
-                if (maze[x + 1][y] == ' ' && maze[x - 1][y] == ' ') {
-                    if (maze[x][y + 1] == '#' && maze[x][y - 1] == '#') {
-                        maze[x][y] = 'O';
+                if (char_maze[x + 1][y] == ' ' && char_maze[x - 1][y] == ' ') {
+                    if (char_maze[x][y + 1] == '#' && char_maze[x][y - 1] == '#') {
+                        char_maze[x][y] = 'O';
                         count++;
                     }
                 }
-                if (maze[x][y + 1] == ' ' && maze[x][y - 1] == ' ') {
-                    if (maze[x + 1][y] == '#' && maze[x - 1][y] == '#') {
-                        maze[x][y] = 'O';
+                if (char_maze[x][y + 1] == ' ' && char_maze[x][y - 1] == ' ') {
+                    if (char_maze[x + 1][y] == '#' && char_maze[x - 1][y] == '#') {
+                        char_maze[x][y] = 'O';
                         count++;
                     }
                 }
@@ -96,12 +104,12 @@ void CustomMazeParser::placeDoors() {
 }
 
 
-void CustomMazeParser::ResetGrid() {
+void CustomMazeParser::ResetMaze() {
 
     //make maze 2d vector of chars with height and width
     vector<char> row(width, '#');
     for (int i = 0; i < height; i++) {
-        maze.push_back(row);
+        char_maze.push_back(row);
     }
 }
 
@@ -117,7 +125,7 @@ void CustomMazeParser::goToSpace(int x, int y) {
     // Starting at the given index, recursively visits every direction in a
     // randomized order.
     // Set my current location to be an empty passage.
-    maze[x][y] = ' ';
+    char_maze[x][y] = ' ';
     // Create an local array containing the 4 directions and shuffle their order.
     int dirs[4];
     dirs[0] = NORTH;
@@ -154,10 +162,10 @@ void CustomMazeParser::goToSpace(int x, int y) {
         int x2 = x + (dx << 1);
         int y2 = y + (dy << 1);
         if (IsInBounds(x2, y2)) {
-            if (maze[x2][y2] == '#') {
+            if (char_maze[x2][y2] == '#') {
                 // (x2,y2) has not been visited yet... knock down the
                 // wall between my current position and that position
-                maze[x2 - dx][y2 - dy] = ' ';
+                char_maze[x2 - dx][y2 - dy] = ' ';
                 // Recursively goToSpace (x2,y2)
                 goToSpace(x2, y2);
             }
@@ -165,11 +173,11 @@ void CustomMazeParser::goToSpace(int x, int y) {
     }
 }
 
-void CustomMazeParser::PrintGrid() {
+void CustomMazeParser::PrintMaze() {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            cout << maze[x][y];
+            cout << char_maze[x][y];
         }
         cout << endl;
     }
@@ -199,25 +207,60 @@ void CustomMazeParser::checkHeightAndWidth(int height, int width) {
 
 }
 
-CustomMazeParser::CustomMazeParser(int height, int width) {
+void CustomMazeParser::fileMazeParser(const char *filename) {
+
+    std::string mazeBuffer = FileUtils::getFileContents(filename);
+
+    std::vector<PositionEnum> row;
+    for (char c: mazeBuffer) {
+        switch (c) {
+            case '#':
+                row.push_back(PositionEnum::WALL);
+                break;
+            case 'O':
+                row.push_back(PositionEnum::OBSTACLE);
+                break;
+            case ' ':
+                row.push_back(PositionEnum::EMPTY);
+                break;
+            case 'L':
+                row.push_back(PositionEnum::WALL_WITH_LIGHT);
+                break;
+            case '\n':
+                maze.push_back(row);
+                row.clear();
+                break;
+            default:
+                std::cout << "Unknown character: " << c << std::endl;
+        }
+    }
+
+    maze.push_back(row);
+    std::cout << "Maze loaded" << std::endl;
+}
+
+CustomMazeParser::CustomMazeParser(int height, int width, const char *fileName) {
+
     checkHeightAndWidth(height, width);
     this->height = height;
     this->width = width;
 //make maze 2d vector of chars with height and width
     vector<char> row(width, '#');
     for (int i = 0; i < height; i++) {
-        maze.push_back(row);
+        char_maze.push_back(row);
     }
 
     // Starting point and top-level control.
 
     srand(time(0)); // seed random number generator.
-    ResetGrid();
+    ResetMaze();
     goToSpace(1, 1);
     placeDoors();
     createEntranceAndExit();
     placeLights();
-    saveGridToFile("../resources/maze/maze.txt");
-    PrintGrid();
+    saveMazeToFile(fileName);
+    PrintMaze();
+
+    fileMazeParser(fileName);
 
 }

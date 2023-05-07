@@ -1,7 +1,6 @@
 #include "Scene.h"
 #include "../utils/ModelLoader.h"
 #include "glm/ext/matrix_transform.hpp"
-#include "../parser/FileMazeParser.h"
 #include "model/InteractableModel.h"
 #include "../parser/CustomMazeParser.h"
 #include "model/Obstacle.h"
@@ -60,8 +59,8 @@ void Scene::setupMaze() {
     std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
     std::vector<Mesh *> lanternMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
-    new CustomMazeParser(29, 29);
-    MazeParser *mazeParser = new FileMazeParser("maze/maze.txt");
+
+    MazeParser *mazeParser = new CustomMazeParser(29, 29, "maze/maze.txt");
     pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());
 
     glm::mat4 base = glm::mat4(1.0f);;

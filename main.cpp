@@ -3,7 +3,6 @@
 #include "glad/glad.h"
 #include "GLFW/glfw3.h"
 #include "src/scene/Scene.h"
-#include "src/parser/FileMazeParser.h"
 
 void setupGlfw();
 void bindGlad();
