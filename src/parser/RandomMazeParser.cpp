@@ -7,15 +7,10 @@
 
 using namespace std;
 //----CONSTANTS-------------------------------------------------------
-
-
 #define NORTH 0
 #define EAST 1
 #define SOUTH 2
 #define WEST 3
-//----GLOBAL VARIABLES------------------------------------------------
-vector<vector<char>> char_maze;
-
 
 //----FUNCTIONS-------------------------------------------------------
 void RandomMazeParser::saveMazeToFile(const char *filename) {
@@ -32,7 +27,20 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            myfile << char_maze[x][y];
+            switch(maze[y][x]){
+                case PositionEnum::WALL:
+                    myfile << "#";
+                    break;
+                case PositionEnum::OBSTACLE:
+                    myfile << "O";
+                    break;
+                case PositionEnum::EMPTY:
+                    myfile << " ";
+                    break;
+                case PositionEnum::LIGHT:
+                    myfile << "L";
+                    break;
+            }
         }
         myfile << endl;
     }
@@ -42,12 +50,12 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
 
 void RandomMazeParser::createEntranceAndExit() {
     // Create an entrance and exit.
-    char_maze[0][1] = ' ';
-    char_maze[0][0] = ' ';
-    char_maze[1][0] = ' ';
-    char_maze[width - 1][height - 2] = ' ';
-    char_maze[width - 2][height - 1] = ' ';
-    char_maze[width - 1][height - 1] = ' ';
+    maze[0][1] = PositionEnum::EMPTY;
+    maze[0][0] = PositionEnum::EMPTY;
+    maze[1][0] = PositionEnum::EMPTY;
+    maze[width - 1][height - 2] = PositionEnum::EMPTY;
+    maze[width - 2][height - 1] = PositionEnum::EMPTY;
+    maze[width - 1][height - 1] = PositionEnum::EMPTY;
 
 }
 
@@ -55,35 +63,18 @@ void RandomMazeParser::placeLights() {
     //place lights 'L' in all T shaped crossroads
     for (int i = 1; i < width - 1; i++) {
         for (int j = 1; j < height - 1; j++) {
-            if (char_maze[i][j] == ' ') {
+            if (maze[i][j] == PositionEnum::EMPTY) {
                 int count = 0;
-                if (char_maze[i + 1][j] == ' ') count++;
-                if (char_maze[i - 1][j] == ' ') count++;
-                if (char_maze[i][j + 1] == ' ') count++;
-                if (char_maze[i][j - 1] == ' ') count++;
+                if (maze[i + 1][j] == PositionEnum::EMPTY) count++;
+                if (maze[i - 1][j] == PositionEnum::EMPTY) count++;
+                if (maze[i][j + 1] == PositionEnum::EMPTY) count++;
+                if (maze[i][j - 1] == PositionEnum::EMPTY) count++;
                 if (count == 3) {
-                    char_maze[i][j] = 'L';
+                    maze[i][j] = PositionEnum::LIGHT;
                 }
             }
         }
     }
-    /* CAUTION CHANGE ENUM TO WALL WITH LIGHT
-    //place lights 'L' on the place where walls are surrounded by 3 empty spaces
-    for (int y = 1; y < height - 1; ++y) {
-        for (int x = 1; x < width - 1; ++x) {
-            if (char_maze[x][y] == '#') {
-                int count = 0;
-                if (char_maze[x + 1][y] == '#') count++;
-                if (char_maze[x - 1][y] == '#') count++;
-                if (char_maze[x][y + 1] == '#') count++;
-                if (char_maze[x][y - 1] == '#') count++;
-                if (count >= 3) {
-                    char_maze[x][y] = 'L';
-                }
-            }
-        }
-    }
-     */
 }
 
 void RandomMazeParser::placeDoors() {
@@ -95,22 +86,22 @@ void RandomMazeParser::placeDoors() {
     while (count < max) {
         int x = rand() % width;
         int y = rand() % height;
-        if (char_maze[x][y] == ' ') {
+        if (maze[x][y] == PositionEnum::EMPTY) {
             int count2 = 0;
-            if (char_maze[x + 1][y] == ' ') count2++;
-            if (char_maze[x - 1][y] == ' ') count2++;
-            if (char_maze[x][y + 1] == ' ') count2++;
-            if (char_maze[x][y - 1] == ' ') count2++;
+            if (maze[x - 1][y] == PositionEnum::EMPTY) count2++;
+            if (maze[x + 1][y] == PositionEnum::EMPTY) count2++;
+            if (maze[x][y + 1] == PositionEnum::EMPTY) count2++;
+            if (maze[x][y - 1] == PositionEnum::EMPTY) count2++;
             if (count2 == 2) {
-                if (char_maze[x + 1][y] == ' ' && char_maze[x - 1][y] == ' ') {
-                    if (char_maze[x][y + 1] == '#' && char_maze[x][y - 1] == '#') {
-                        char_maze[x][y] = 'O';
+                if (maze[x + 1][y] == PositionEnum::EMPTY && maze[x - 1][y] == PositionEnum::EMPTY) {
+                    if (maze[x][y + 1] == PositionEnum::WALL && maze[x][y - 1] == PositionEnum::WALL) {
+                        maze[x][y] = PositionEnum::OBSTACLE;
                         count++;
                     }
                 }
-                if (char_maze[x][y + 1] == ' ' && char_maze[x][y - 1] == ' ') {
-                    if (char_maze[x + 1][y] == '#' && char_maze[x - 1][y] == '#') {
-                        char_maze[x][y] = 'O';
+                if (maze[x][y + 1] == PositionEnum::EMPTY && maze[x][y - 1] == PositionEnum::EMPTY) {
+                    if (maze[x + 1][y] == PositionEnum::WALL && maze[x - 1][y] == PositionEnum::WALL) {
+                        maze[x][y] = PositionEnum::OBSTACLE;
                         count++;
                     }
                 }
@@ -124,9 +115,9 @@ void RandomMazeParser::placeDoors() {
 void RandomMazeParser::ResetMaze() {
 
     //make maze 2d vector of chars with height and width
-    vector<char> row(width, '#');
+    vector<PositionEnum> row(width, PositionEnum::WALL);
     for (int i = 0; i < height; i++) {
-        char_maze.push_back(row);
+        maze.push_back(row);
     }
 }
 
@@ -142,7 +133,7 @@ void RandomMazeParser::goToSpace(int x, int y) {
     // Starting at the given index, recursively visits every direction in a
     // randomized order.
     // Set my current location to be an empty passage.
-    char_maze[x][y] = ' ';
+    maze[x][y] = PositionEnum::EMPTY;;
     // Create an local array containing the 4 directions and shuffle their order.
     int dirs[4];
     dirs[0] = NORTH;
@@ -179,10 +170,10 @@ void RandomMazeParser::goToSpace(int x, int y) {
         int x2 = x + (dx << 1);
         int y2 = y + (dy << 1);
         if (IsInBounds(x2, y2)) {
-            if (char_maze[x2][y2] == '#') {
+            if (maze[x2][y2] == PositionEnum::WALL) {
                 // (x2,y2) has not been visited yet... knock down the
                 // wall between my current position and that position
-                char_maze[x2 - dx][y2 - dy] = ' ';
+                maze[x2 - dx][y2 - dy] = PositionEnum::EMPTY;
                 // Recursively goToSpace (x2,y2)
                 goToSpace(x2, y2);
             }
@@ -194,7 +185,21 @@ void RandomMazeParser::PrintMaze() {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            cout << char_maze[x][y];
+            switch (maze[y][x]) {
+                case PositionEnum::WALL:
+                    cout << "#";
+                    break;
+                case PositionEnum::EMPTY:
+                    cout << " ";
+                    break;
+                case PositionEnum::OBSTACLE:
+                    cout << "O";
+                    break;
+                case PositionEnum::LIGHT:
+                    cout << "L";
+                    break;
+
+            }
         }
         cout << endl;
     }
@@ -224,47 +229,16 @@ void RandomMazeParser::checkHeightAndWidth(int height, int width) {
 
 }
 
-void RandomMazeParser::fileMazeParser(const char *filename) {
-
-    std::string mazeBuffer = FileUtils::getFileContents(filename);
-
-    std::vector<PositionEnum> row;
-    for (char c: mazeBuffer) {
-        switch (c) {
-            case '#':
-                row.push_back(PositionEnum::WALL);
-                break;
-            case 'O':
-                row.push_back(PositionEnum::OBSTACLE);
-                break;
-            case ' ':
-                row.push_back(PositionEnum::EMPTY);
-                break;
-            case 'L':
-                row.push_back(PositionEnum::LIGHT);
-                break;
-            case '\n':
-                maze.push_back(row);
-                row.clear();
-                break;
-            default:
-                std::cout << "Unknown character: " << c << std::endl;
-        }
-    }
-
-    maze.push_back(row);
-    std::cout << "Maze loaded" << std::endl;
-}
 
 RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) {
 
     checkHeightAndWidth(height, width);
     this->height = height;
     this->width = width;
-//make maze 2d vector of chars with height and width
-    vector<char> row(width, '#');
+
+    vector<PositionEnum> row(width, PositionEnum::WALL);
     for (int i = 0; i < height; i++) {
-        char_maze.push_back(row);
+        maze.push_back(row);
     }
 
     // Starting point and top-level control.
@@ -277,7 +251,5 @@ RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) 
     placeLights();
     saveMazeToFile(fileName);
     PrintMaze();
-
-    fileMazeParser(fileName);
 
 }
