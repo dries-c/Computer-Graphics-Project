@@ -1,7 +1,7 @@
 #include "AIEntity.h"
 #include "glm/ext/matrix_transform.hpp"
 
-#define SPEED 2.0f
+#define SPEED 1.0f
 
 void AIEntity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
     if (!path.empty()) {

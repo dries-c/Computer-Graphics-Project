@@ -2,6 +2,7 @@
 #include "glm/geometric.hpp"
 
 #include <stack>
+#include <algorithm>
 
 PathFindingAlgorithm::PathFindingAlgorithm(std::vector<std::vector<bool>> walkableMaze) : walkableMaze(
         std::move(walkableMaze)) {}
