@@ -110,8 +110,11 @@ glm::mat4 Entity::getModelMatrix() const {
     return modelMatrix;
 }
 
+
 void Entity::onAttack() {
     health--;
+    Sound sound = Sound("hit.ogg");
+    sound.play();
     if (health <= 0) {
         kill();
         std::cout << "Entity died" << std::endl;
