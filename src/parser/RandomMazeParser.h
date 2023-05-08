@@ -27,7 +27,7 @@ private:
 public:
     explicit RandomMazeParser(int height, int width, const char* fileName);
 
-    void placeDoors();
+    void placeObstacles();
 };
 
 

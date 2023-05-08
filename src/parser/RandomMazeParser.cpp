@@ -27,7 +27,7 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            switch(maze[y][x]){
+            switch(maze[x][y]){
                 case PositionEnum::WALL:
                     myfile << "#";
                     break;
@@ -77,7 +77,7 @@ void RandomMazeParser::placeLights() {
     }
 }
 
-void RandomMazeParser::placeDoors() {
+void RandomMazeParser::placeObstacles() {
     //place doors 'O' on the place where empty spaces are surrounded by 2 empty spaces and there is no dead end behind the door
     //the count of doors is based on the width and height of the maze
     //the ration is 1 door per 36 spaces
@@ -113,6 +113,7 @@ void RandomMazeParser::placeDoors() {
 
 
 void RandomMazeParser::ResetMaze() {
+
 
     //make maze 2d vector of chars with height and width
     vector<PositionEnum> row(width, PositionEnum::WALL);
@@ -185,7 +186,7 @@ void RandomMazeParser::PrintMaze() {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            switch (maze[y][x]) {
+            switch (maze[x][y]) {
                 case PositionEnum::WALL:
                     cout << "#";
                     break;
@@ -244,9 +245,9 @@ RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) 
     // Starting point and top-level control.
 
     srand(time(0)); // seed random number generator.
-    ResetMaze();
+    //ResetMaze();
     goToSpace(1, 1);
-    placeDoors();
+    placeObstacles();
     createEntranceAndExit();
     placeLights();
     saveMazeToFile(fileName);
