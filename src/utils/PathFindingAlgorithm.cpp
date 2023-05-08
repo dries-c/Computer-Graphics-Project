@@ -67,7 +67,7 @@ std::vector<glm::vec2> PathFindingAlgorithm::getNeighbours(const glm::vec2 &curr
 }
 
 bool PathFindingAlgorithm::isWalkable(const glm::vec2 &position) const {
-    if (position.x < 0 || position.y < 0) {
+    if (position.x < 0 || position.y < 0 || position.x >= walkableMaze.size()) {
         return false;
     }
 
