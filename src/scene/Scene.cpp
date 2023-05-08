@@ -47,10 +47,12 @@ Scene::Scene() {
 
 void Scene::setupEntities() {
     ModelLoader *modelLoader = ModelLoader::getInstance();
-    auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f), AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f, 0.0f);
-    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/zombie/Scared_ghost.obj");
+    auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f),
+                                  AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f,
+                                  0.0f);
+    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/ghost/Scared_ghost.obj");
 
-    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"),  meshes);
+    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"), meshes);
     aiEntity->setModel(aiModel);
     addEntity(aiEntity);
 }
@@ -73,8 +75,9 @@ void Scene::setupMaze() {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
-            if (position == PositionEnum::LIGHT){
-                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.132f, j + 0.5f)), glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+            if (position == PositionEnum::LIGHT) {
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.132f, j + 0.5f)),
+                                                 glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 lanternMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
@@ -82,8 +85,8 @@ void Scene::setupMaze() {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
                 auto model = new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j)),
-                                                   new Shader("shaders/singular.vs", "shaders/shader.fs"),
-                                                   obstacleMesh);
+                                          new Shader("shaders/singular.vs", "shaders/shader.fs"),
+                                          obstacleMesh);
                 addObject(model);
             }
 
@@ -94,7 +97,8 @@ void Scene::setupMaze() {
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
 
-    auto lanternModel = new Model(lanternMatrices,new Shader("shaders/instanced.vs", "shaders/shader.fs"), lanternMeshes, false);
+    auto lanternModel = new Model(lanternMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"),
+                                  lanternMeshes, false);
     lanternModel->setLightSource(PointLight(
             glm::vec3(0.01f, 0.01f, 0.01f),
             glm::vec3(0.5f, 0.5f, 0.5f),
