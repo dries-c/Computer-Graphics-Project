@@ -1,4 +1,6 @@
 #include "Lighting.h"
+#include "GLFW/glfw3.h"
+
 #define M_PI   3.14159265358979323846264338327950288
 
 Lighting *Lighting::instance = nullptr;
@@ -19,7 +21,14 @@ Lighting::Lighting() {
             1.0f,
             0.09f,
             0.032f
-   );
+    );
+}
+
+void Lighting::toggleSpotlight() {
+    if (glfwGetTime() - spotLightToggleTime > SPOTLIGHT_TOGGLE_DELAY) {
+        spotLightEnabled = !spotLightEnabled;
+        spotLightToggleTime = glfwGetTime();
+    }
 }
 
 Lighting::~Lighting() {
@@ -34,6 +43,7 @@ void Lighting::bind(Shader *shader) const {
         pointLights[i]->bind(shader, i);
     }
     shader->setInt("pointLightCount", pointLights.size());
+    shader->setBool("spotLightEnabled", spotLightEnabled);
 
     spotLightSource->bind(shader, 0);
 }

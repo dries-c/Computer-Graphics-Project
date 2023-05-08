@@ -6,7 +6,7 @@
 
 void setupGlfw();
 void bindGlad();
-void processInput(Camera *camera, GLFWwindow *window);
+void processInput(Camera *camera, GLFWwindow *window, Lighting *lighting);
 GLFWwindow *createWindow(int width, int xPos, const char *yPos);
 
 static Scene* scene;
@@ -33,7 +33,9 @@ int main() {
         lastTime = currentTime;
 
         auto camera = Camera::getInstance();
-        processInput(camera, window);
+        auto lighting = Lighting::getInstance();
+
+        processInput(camera, window, lighting);
 
         auto boundingBoxes = scene->getBoundingBoxes();
         scene->doPhysics(deltaTime, boundingBoxes, camera->getPosition());
@@ -124,7 +126,7 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
     return window;
 }
 
-void processInput(Camera *camera, GLFWwindow *window) {
+void processInput(Camera *camera, GLFWwindow *window, Lighting *lighting) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
     }
@@ -157,5 +159,8 @@ void processInput(Camera *camera, GLFWwindow *window) {
     }
     if (glfwGetKey(window, GLFW_KEY_KP_0) == GLFW_PRESS){
         camera->processKeyboard(RESET_SPEED_FREECAM);
+    }
+    if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS){
+        lighting->toggleSpotlight();
     }
 }

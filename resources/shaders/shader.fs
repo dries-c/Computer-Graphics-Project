@@ -53,6 +53,7 @@ uniform DirectionalLight directionalLight;
 uniform int pointLightCount;
 uniform PointLight[MAX_SIZE] pointLights;
 uniform SpotLight spotLight;
+uniform bool spotLightEnabled;
 uniform Material material;
 
 vec3 applyDirectionalLight(vec3 viewDir);
@@ -65,7 +66,9 @@ void main()
     vec3 viewDir = normalize(cameraPos - FragPos);
 
     vec3 result = applyDirectionalLight(viewDir);
-    result += applySpotLight(viewDir);
+    if(spotLightEnabled){
+        result += applySpotLight(viewDir);
+    }
     for(int i = 0; i < pointLightCount; i++)
     {
         result += applyPointLights(pointLights[i], viewDir);
