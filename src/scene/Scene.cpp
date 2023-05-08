@@ -50,9 +50,9 @@ void Scene::setupEntities() {
     auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f),
                                   AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f,
                                   0.0f);
-    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/ghost/Scared_ghost.obj");
+    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/ghost/ghost.obj");
 
-    auto *aiModel = new Model(glm::mat4(1.0f), new Shader("shaders/singular.vs", "shaders/shader.fs"), meshes);
+    auto *aiModel = new Model(glm::rotate(glm::mat4(0.0f), glm::radians(180.0f), glm::vec3(0, 1, 0)), new Shader("shaders/singular.vs", "shaders/lighting.fs"), meshes);
     aiEntity->setModel(aiModel);
     addEntity(aiEntity);
 }
@@ -62,7 +62,7 @@ void Scene::setupMaze() {
 
     std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
-    std::vector<Mesh *> lanternMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
+    std::vector<Mesh *> torchMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
 
     MazeParser *mazeParser = new RandomMazeParser(29, 29, "maze/maze.txt");
     pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());
@@ -70,22 +70,21 @@ void Scene::setupMaze() {
     glm::mat4 base = glm::mat4(1.0f);;
     std::vector<glm::mat4> floorMatrices = {};
     std::vector<glm::mat4> wallMatrices = {};
-    std::vector<glm::mat4> lanternMatrices = {};
+    std::vector<glm::mat4> torchMatrices = {};
     for (int i = 0; i < mazeParser->getMaze().size(); i++) {
         for (int j = 0; j < mazeParser->getMaze()[i].size(); j++) {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
             if (position == PositionEnum::LIGHT) {
-                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.132f, j + 0.5f)),
-                                                 glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-                lanternMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.125f, j + 0.5f)),glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                torchMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
                 auto model = new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j)),
-                                          new Shader("shaders/singular.vs", "shaders/shader.fs"),
+                                          new Shader("shaders/singular.vs", "shaders/lighting.fs"),
                                           obstacleMesh);
                 addObject(model);
             }
@@ -94,12 +93,11 @@ void Scene::setupMaze() {
         }
     }
 
-    addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), wallMeshes));
-    addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"), floorMeshes));
+    addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/lighting.fs"), wallMeshes));
+    addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/lighting.fs"), floorMeshes));
 
-    auto lanternModel = new Model(lanternMatrices, new Shader("shaders/instanced.vs", "shaders/shader.fs"),
-                                  lanternMeshes, false);
-    lanternModel->setLightSource(PointLight(
+    auto torchModel = new Model(torchMatrices, new Shader("shaders/instanced.vs", "shaders/noLighting.fs"), torchMeshes, false);
+    torchModel->setLightSource(PointLight(
             glm::vec3(0.01f, 0.01f, 0.01f),
             glm::vec3(0.5f, 0.5f, 0.5f),
             glm::vec3(0.10f, 0.10f, 0.10f),
@@ -107,7 +105,7 @@ void Scene::setupMaze() {
             0.09f,
             0.032f
     ));
-    addObject(lanternModel);
+    addObject(torchModel);
 
     Sound sound = Sound("startup.ogg");
     sound.play();
