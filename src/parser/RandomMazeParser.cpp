@@ -50,9 +50,9 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
 
 void RandomMazeParser::createEntranceAndExit() {
     // Create an entrance and exit.
-    maze[0][1] = PositionEnum::EMPTY;
-    maze[0][0] = PositionEnum::EMPTY;
-    maze[1][0] = PositionEnum::EMPTY;
+    //maze[0][1] = PositionEnum::EMPTY;
+    //maze[0][0] = PositionEnum::EMPTY;
+    //maze[1][0] = PositionEnum::EMPTY;
     maze[width - 1][height - 2] = PositionEnum::EMPTY;
     maze[width - 2][height - 1] = PositionEnum::EMPTY;
     maze[width - 1][height - 1] = PositionEnum::EMPTY;
@@ -60,6 +60,8 @@ void RandomMazeParser::createEntranceAndExit() {
 }
 
 void RandomMazeParser::placeLights() {
+
+    maze[1][1] = PositionEnum::LIGHT;
     //place lights 'L' in all T shaped crossroads
     for (int i = 1; i < width - 1; i++) {
         for (int j = 1; j < height - 1; j++) {
