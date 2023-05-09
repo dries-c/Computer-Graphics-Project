@@ -1,5 +1,7 @@
 #include "Lighting.h"
 #include "GLFW/glfw3.h"
+#include <algorithm>
+
 
 #define M_PI   3.14159265358979323846264338327950288
 
