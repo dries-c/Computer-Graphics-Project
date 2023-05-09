@@ -129,7 +129,7 @@ void Entity::knockback(glm::vec3 pos, float force) {
 
     velocity = glm::vec3(
             velocity.x * 0.5f + direction.x * (1.0f / f) * force,
-            min(velocity.y * 0.5f + force, JUMP_SPEED / 1.25f),
+            fmin(velocity.y * 0.5f + force, JUMP_SPEED / 1.25f),
             velocity.z * 0.5f + direction.z * (1.0f / f) * force
     );
 }
