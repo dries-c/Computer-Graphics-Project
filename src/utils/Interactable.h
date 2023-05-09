@@ -11,8 +11,8 @@ class Interactable {
 protected:
     bool alive = true;
 public:
-    virtual void onAttack(float distance) = 0;
-    virtual void onInteract(float distance) = 0;
+    virtual void onAttack(glm::vec3 position, float distance) = 0;
+    virtual void onInteract(glm::vec3 position, float distance) = 0;
     [[nodiscard]] bool isAlive() const { return alive; }
     void kill(){ alive = false; }
     [[nodiscard]] virtual std::vector<AxisAlignedBB> getBoundingBoxes() const = 0;

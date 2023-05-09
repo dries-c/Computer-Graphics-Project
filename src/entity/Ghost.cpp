@@ -3,7 +3,7 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "GLFW/glfw3.h"
 
-void Ghost::onAttack(float distance) {
+void Ghost::onAttack(glm::vec3 position, float distance) {
     health--;
     std::string soundPath;
 
@@ -13,13 +13,16 @@ void Ghost::onAttack(float distance) {
     } else {
         soundPath = Sound::getRandomSound("hit/hit.ogg", 3);
         model->onHit();
+
+        glm::vec3 direction = glm::normalize(position - getPosition());
+        knockback(direction, 0.5f);
     }
 
     Sound sound = Sound(soundPath, getPosition());
     sound.play();
 }
 
-void Ghost::onInteract(float distance) {
+void Ghost::onInteract(glm::vec3 position, float distance) {
     // do nothing
 }
 

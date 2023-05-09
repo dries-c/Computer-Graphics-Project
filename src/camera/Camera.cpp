@@ -177,7 +177,6 @@ std::pair<Interactable*, float> Camera::rayCast(const std::vector<Interactable *
         }
 
         if (distance < closestDistance) {
-            std::cout << "Hit collider" << bb.min.x << ", " << bb.min.y << ", " << bb.min.z << std::endl;
             return {nullptr, -1}; // We hit a collider, so we can't interact with anything
         }
     }
@@ -188,12 +187,8 @@ std::pair<Interactable*, float> Camera::rayCast(const std::vector<Interactable *
 void Camera::interact(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) {
     auto[closestModel, distance] = rayCast(interactables, colliders);
 
-    if(closestModel != nullptr){
-        std::cout << "Distance: " << distance << std::endl;
-    }
-
     if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
-        closestModel->onInteract(distance);
+        closestModel->onInteract(position, distance);
     }
 }
 
@@ -227,6 +222,6 @@ void Camera::attack(const std::vector<Interactable *> &interactables, const std:
     auto[closestModel, distance] = rayCast(interactables, colliders);
 
     if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
-        closestModel->onAttack(distance);
+        closestModel->onAttack(position, distance);
     }
 }

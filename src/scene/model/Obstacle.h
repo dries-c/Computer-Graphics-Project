@@ -6,8 +6,8 @@
 class Obstacle : public InteractableModel {
 public:
     Obstacle(glm::mat4 modelMatrix, Shader *shader, const std::vector<Mesh *> &meshes, bool collision = true) : InteractableModel(modelMatrix, shader, meshes, collision) {};
-    void onInteract(float distance) override;
-    void onAttack(float distance) override;
+    void onInteract(glm::vec3 position, float distance) override;
+    void onAttack(glm::vec3 position, float distance) override;
 };
 
 #endif

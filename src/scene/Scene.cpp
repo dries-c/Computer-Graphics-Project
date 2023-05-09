@@ -7,6 +7,7 @@
 #include "GLFW/glfw3.h"
 #include "../entity/AIEntity.h"
 #include "../entity/Ghost.h"
+#include "model/Torch.h"
 #include <iostream>
 
 #define PATH_FINDING_INTERVAL 0.5f
@@ -47,7 +48,7 @@ Scene::Scene() {
 }
 
 void Scene::setupEntities() {
-    addEntity(new Ghost(glm::vec3(0.1f, 0.8f, 0.1f)));
+
 }
 
 void Scene::setupMaze() {
@@ -55,7 +56,6 @@ void Scene::setupMaze() {
 
     std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
     std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
-    std::vector<Mesh *> torchMeshes = modelLoader->loadMeshes("objects/torch/torch.obj");
 
     MazeParser *mazeParser = new RandomMazeParser(29, 29, "maze/maze.txt");
     pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());
@@ -73,6 +73,8 @@ void Scene::setupMaze() {
                 torchMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
+            } else if (position == PositionEnum::GHOST) {
+                addEntity(new Ghost(glm::vec3(i + 0.1f, 0.8f, j + 0.1f)));
             } else if (position == PositionEnum::OBSTACLE) {
                 // needs to be an instance, since when the model is removed from the scene, it will be deleted
                 auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
@@ -88,18 +90,7 @@ void Scene::setupMaze() {
 
     addObject(new Model(wallMatrices, new Shader("shaders/instanced.vs", "shaders/lighting.fs"), wallMeshes));
     addObject(new Model(floorMatrices, new Shader("shaders/instanced.vs", "shaders/lighting.fs"), floorMeshes));
-
-    auto torchModel = new Model(torchMatrices, new Shader("shaders/instanced.vs", "shaders/noLighting.fs"), torchMeshes, false);
-    torchModel->setLightSource(PointLight(
-            glm::vec3(0.01f, 0.01f, 0.01f),
-            glm::vec3(0.5f, 0.5f, 0.5f),
-            glm::vec3(0.10f, 0.10f, 0.10f),
-            Lighting::rgbToVec3(255, 197, 143),
-            0.1f,
-            0.09f,
-            0.032f
-    ));
-    addObject(torchModel);
+    addObject(new Torch(torchMatrices));
 
     Sound sound = Sound("startup.ogg");
     sound.play();

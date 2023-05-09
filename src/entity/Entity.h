@@ -45,6 +45,8 @@ public:
 
     void onCollision(const AxisAlignedBB &collider);
 
+    void knockback(glm::vec3 direction, float force);
+
     [[nodiscard]] std::vector<AxisAlignedBB> getBoundingBoxes() const;
     [[nodiscard]] glm::mat4 getModelMatrix() const;
 };

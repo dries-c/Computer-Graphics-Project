@@ -11,7 +11,7 @@ std::vector<std::vector<bool>> MazeParser::getWalkableMaze() {
         std::vector<bool> row;
         row.reserve(i.size());
         for (auto position: i) {
-            row.push_back(position == PositionEnum::EMPTY || position == PositionEnum::OBSTACLE || position == PositionEnum::LIGHT);
+            row.push_back(position == PositionEnum::EMPTY || position == PositionEnum::OBSTACLE || position == PositionEnum::LIGHT || position == PositionEnum::GHOST);
         }
         walkableMaze.push_back(row);
     }

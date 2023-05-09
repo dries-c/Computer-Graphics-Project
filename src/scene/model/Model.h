@@ -10,7 +10,7 @@
 class Model {
 private:
     void setupInstancing();
-    bool isHit() const;
+    [[nodiscard]] bool isHit() const;
 
 protected:
     std::vector<Mesh *> meshes;

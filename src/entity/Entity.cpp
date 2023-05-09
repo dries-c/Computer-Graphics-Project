@@ -116,3 +116,7 @@ std::vector<AxisAlignedBB> Entity::getBoundingBoxes() const {
         return model->getBoundingBoxes(getModelMatrix());
     }
 }
+
+void Entity::knockback(glm::vec3 direction, float force) {
+    velocity += direction * force;
+}

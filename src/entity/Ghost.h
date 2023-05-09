@@ -8,8 +8,8 @@ class Ghost : public AIEntity, public Interactable {
 private:
     int health;
 public:
-    void onAttack(float distance) override;
-    void onInteract(float distance) override;
+    void onAttack(glm::vec3 position, float distance) override;
+    void onInteract(glm::vec3 position, float distance) override;
 
     Ghost(glm::vec3 position);
     [[nodiscard]] std::vector<AxisAlignedBB> getBoundingBoxes() const override { return Entity::getBoundingBoxes(); }
