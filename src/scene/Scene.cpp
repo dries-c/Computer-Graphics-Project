@@ -49,8 +49,8 @@ Scene::Scene() {
 void Scene::setupMaze() {
     ModelLoader *modelLoader = ModelLoader::getInstance();
 
-    std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/cube/stone.obj");
-    std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/grass/grass.obj");
+    std::vector<Mesh *> wallMeshes = modelLoader->loadMeshes("objects/wall/wall.obj");
+    std::vector<Mesh *> floorMeshes = modelLoader->loadMeshes("objects/floor/floor.obj");
 
     MazeParser *mazeParser = new RandomMazeParser(29, 29, "maze/maze.txt");
     pathFinding = new PathFindingAlgorithm(mazeParser->getWalkableMaze());

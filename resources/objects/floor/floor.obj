@@ -1,19 +1,31 @@
-# Made in Blockbench 4.7.1
-mtllib stone.mtl
+# Made in Blockbench 4.7.2
+mtllib floor.mtl
 
 o cube
-v 1 2 1
-v 1 2 0
+v 1 0.0625 1
+v 1 0.0625 0
 v 1 0 1
 v 1 0 0
-v 0 2 0
-v 0 2 1
+v 0 0.0625 0
+v 0 0.0625 1
 v 0 0 0
 v 0 0 1
 vt 0 1
 vt 1 1
-vt 1 0
-vt 0 0
+vt 1 0.9375
+vt 0 0.9375
+vt 0 1
+vt 1 1
+vt 1 0.9375
+vt 0 0.9375
+vt 0 1
+vt 1 1
+vt 1 0.9375
+vt 0 0.9375
+vt 0 1
+vt 1 1
+vt 1 0.9375
+vt 0 0.9375
 vt 0 1
 vt 1 1
 vt 1 0
@@ -22,25 +34,13 @@ vt 0 1
 vt 1 1
 vt 1 0
 vt 0 0
-vt 0 1
-vt 1 1
-vt 1 0
-vt 0 0
-vt 1 0
-vt 0 0
-vt 0 1
-vt 1 1
-vt 1 1
-vt 0 1
-vt 0 0
-vt 1 0
 vn 0 0 -1
 vn 1 0 0
 vn 0 0 1
 vn -1 0 0
 vn 0 1 0
 vn 0 -1 0
-usemtl m_b5ce4c24-d23a-cc49-c8e2-52a5cae89c02
+usemtl m_7ac7f25a-195f-6f66-1165-d6e9a5a6c2da
 f 4/4/1 7/3/1 5/2/1 2/1/1
 f 3/8/2 4/7/2 2/6/2 1/5/2
 f 8/12/3 3/11/3 1/10/3 6/9/3
