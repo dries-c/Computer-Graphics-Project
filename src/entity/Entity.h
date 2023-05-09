@@ -8,6 +8,9 @@
 
 #define GRAVITY 9.81f
 #define JUMP_SPEED 3.0f
+#define ATTACK_DELAY 1.0f
+#define ATTACK_DISTANCE 1.0f
+#define ATTACK_FORCE 3.0f
 
 class Entity {
 protected:
@@ -45,7 +48,7 @@ public:
 
     void onCollision(const AxisAlignedBB &collider);
 
-    void knockback(glm::vec3 direction, float force);
+    void knockback(glm::vec3 position, float force);
 
     [[nodiscard]] std::vector<AxisAlignedBB> getBoundingBoxes() const;
     [[nodiscard]] glm::mat4 getModelMatrix() const;

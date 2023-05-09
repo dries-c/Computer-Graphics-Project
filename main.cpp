@@ -7,6 +7,7 @@
 void setupGlfw();
 void bindGlad();
 void processInput(Camera *camera, GLFWwindow *window, Lighting *lighting);
+void processAttacks(Camera *camera, std::vector<Ghost *> aiEntities);
 GLFWwindow *createWindow(int width, int xPos, const char *yPos);
 
 static Scene* scene;
@@ -36,6 +37,7 @@ int main() {
         auto lighting = Lighting::getInstance();
 
         processInput(camera, window, lighting);
+        processAttacks(camera, scene->getGhosts());
 
         auto boundingBoxes = scene->getBoundingBoxes();
         scene->doPhysics(deltaTime, boundingBoxes, camera->getPosition());
@@ -51,6 +53,23 @@ int main() {
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+    }
+}
+
+void processAttacks(Camera *camera, std::vector<Ghost *> ghosts) {
+    if (camera->wasHit()) {
+        return;
+    }
+
+    glm::vec3 cameraPosition = camera->getPosition();
+
+    for(auto ghost : ghosts) {
+        if(ghost->canAttack(cameraPosition)) {
+            ghost->attack();
+            camera->knockback(ghost->getPosition(), 3.0f);
+            camera->onAttack();
+            return;
+        }
     }
 }
 

@@ -9,6 +9,7 @@
 #include "../entity/Entity.h"
 #include "lighting/Lighting.h"
 #include "../utils/PathFindingAlgorithm.h"
+#include "../entity/Ghost.h"
 
 class Scene {
 public:
@@ -21,6 +22,7 @@ public:
 
     std::vector<AxisAlignedBB> getBoundingBoxes();
     std::vector<Interactable *> getInteractables();
+    std::vector<Ghost *> getGhosts();
 
 private:
     std::vector<Model *> objects;

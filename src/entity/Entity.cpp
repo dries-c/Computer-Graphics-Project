@@ -27,11 +27,14 @@ void Entity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &collid
 
     setPosition(position);
 
-    velocity.x = 0;
-    if (onGround && velocity.y < 0) {
-        velocity.y = 0;
+    if (onGround) {
+        velocity.x *= 0.8f;
+        velocity.z *= 0.8f;
+
+        if (velocity.y < 0) {
+            velocity.y = 0;
+        }
     }
-    velocity.z = 0;
 }
 
 AxisAlignedBB Entity::getBoundingBox() const {
@@ -41,7 +44,7 @@ AxisAlignedBB Entity::getBoundingBox() const {
 Entity::Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch) : position(position),
                                                                                         boundingBox(boundingBox),
                                                                                         yaw(yaw),
-                                                                                        pitch(pitch){}
+                                                                                        pitch(pitch) {}
 
 glm::vec3 Entity::getPosition() const {
     return position;
@@ -117,6 +120,16 @@ std::vector<AxisAlignedBB> Entity::getBoundingBoxes() const {
     }
 }
 
-void Entity::knockback(glm::vec3 direction, float force) {
-    velocity += direction * force;
+void Entity::knockback(glm::vec3 pos, float force) {
+    glm::vec3 direction = glm::normalize(position - pos);
+    double f = sqrt(direction.x * direction.x + direction.z * direction.z);
+    if (f <= 0) {
+        return;
+    }
+
+    velocity = glm::vec3(
+            velocity.x * 0.5f + direction.x * (1.0f / f) * force,
+            glm::min(velocity.y * 0.5f + force, JUMP_SPEED / 1.25f),
+            velocity.z * 0.5f + direction.z * (1.0f / f) * force
+    );
 }

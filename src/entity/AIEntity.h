@@ -6,7 +6,7 @@
 #include "Entity.h"
 
 class AIEntity : public Entity {
-private:
+protected:
     std::stack<glm::vec2> path;
 public:
     AIEntity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch) : Entity(position, boundingBox, yaw, pitch) {};

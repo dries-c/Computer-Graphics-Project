@@ -11,7 +11,7 @@
 #include "../sound/Sound.h"
 #include <string>
 
-#define SPEED 3.0f
+#define SPEED 0.04f
 
 class Camera : public Entity {
 protected:
@@ -27,15 +27,18 @@ private:
 
     Sound* walkSound = nullptr;
 
-    float FREE_CAM_SPEED = 3.0f;
+    float freeCamSpeed = 0.05f;
+    bool didMove = false;
     double freeCamToggleTime = 0.0f;
-    const double FREE_CAM_TOGGLE_DELAY = 0.2f;
+    const double freeCamToggleDelay = 0.2f;
 
     int width{};
     int height{};
 
     float sensitivity;
     float fov;
+
+    double lastHitTime = 0.0f;
 
     void updateCameraVectors();
     [[nodiscard]] std::pair<Interactable*, float> rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const;
@@ -55,6 +58,10 @@ public:
     void processMouseScroll(float yoffset);
 
     void processKeyboard(Input direction);
+
+    void onAttack();
+
+    bool wasHit() const;
 
     void processKeyboard(FreeCamControls direction);
 

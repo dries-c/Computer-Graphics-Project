@@ -19,38 +19,42 @@ Camera *Camera::getInstance(glm::vec3 position, glm::vec3 up, float yaw, float p
 }
 
 void Camera::processKeyboard(Input direction) {
-    float speed = hasGravity ? SPEED : FREE_CAM_SPEED;
+    float speed = hasGravity ? SPEED : freeCamSpeed;
 
     switch (direction) {
         case Input::INPUT_FORWARD: {
-            velocity.z += front.z * speed;
-            velocity.x += front.x * speed;
+            position.z += front.z * speed;
+            position.x += front.x * speed;
+            didMove = true;
         }
             break;
         case Input::INPUT_BACKWARD: {
-            velocity.z -= front.z * speed;
-            velocity.x -= front.x * speed;
+            position.z -= front.z * speed;
+            position.x -= front.x * speed;
+            didMove = true;
         }
             break;
         case Input::INPUT_LEFT: {
-            velocity -= right * speed;
+            position -= right * speed;
+            didMove = true;
         }
             break;
         case Input::INPUT_RIGHT: {
-            velocity += right * speed;
+            position += right * speed;
+            didMove = true;
         }
             break;
         case Input::INPUT_JUMP: {
             if (hasGravity) {
                 jump();
             } else {
-                position.y += up.y * speed / 20;
+                position.y += up.y * speed;
             }
         }
             break;
         case Input::INPUT_DOWN: {
             if (!hasGravity) {
-                position.y -= up.y * speed / 20;
+                position.y -= up.y * speed;
             }
         }
             break;
@@ -61,31 +65,28 @@ void Camera::processKeyboard(Input direction) {
 void Camera::processKeyboard(FreeCamControls control) {
     switch (control) {
         case FreeCamControls::TOGGLE_FREECAM:
-            if (glfwGetTime() - freeCamToggleTime > FREE_CAM_TOGGLE_DELAY) {
+            if (glfwGetTime() - freeCamToggleTime > freeCamToggleDelay) {
                 setHasGravity(!hasGravity);
-                //stop falling or jumping
-                velocity.y = 0;
-
                 freeCamToggleTime = glfwGetTime();
             }
             break;
         case FreeCamControls::FASTER_FREECAM:
             if (!hasGravity) {
                 //Add speed to free camera
-                FREE_CAM_SPEED += 0.1f;
+                freeCamSpeed += 0.01f;
             }
             break;
         case FreeCamControls::SLOWER_FREECAM:
             if (!hasGravity) {
                 //Subtract speed from free camera make sure it's at least 0.05
-                FREE_CAM_SPEED -= 0.1f;
-                FREE_CAM_SPEED = fmax(FREE_CAM_SPEED, 0.5f);
+                freeCamSpeed -= 0.01f;
+                freeCamSpeed = fmax(freeCamSpeed, 0.05f);
             }
             break;
         case FreeCamControls::RESET_SPEED_FREECAM:
             if (!hasGravity) {
                 //Set speed to default
-                FREE_CAM_SPEED = 3.0f;
+                freeCamSpeed = 0.05f;
             }
             break;
     }
@@ -138,11 +139,6 @@ glm::mat4 Camera::getViewMatrix() const {
     return glm::lookAt(position, position + front, up);
 }
 
-std::string Camera::toString() const {
-    return "Camera: " + std::to_string(position.x) + ", " + std::to_string(position.y) + ", " +
-           std::to_string(position.z) + ", YAW: " + std::to_string(yaw) + ", PITCH:" + std::to_string(pitch);
-}
-
 glm::mat4 Camera::getProjectionMatrix() const {
     return glm::perspective(glm::radians(fov), (float) width / (float) height, 0.1f, 100.0f);
 }
@@ -152,7 +148,8 @@ void Camera::setWindowDimensions(int width, int height) {
     this->height = height;
 }
 
-std::pair<Interactable*, float> Camera::rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const {
+std::pair<Interactable *, float>
+Camera::rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const {
     float closestDistance = FLT_MAX;
     Interactable *closestInteractable = nullptr;
 
@@ -185,7 +182,7 @@ std::pair<Interactable*, float> Camera::rayCast(const std::vector<Interactable *
 }
 
 void Camera::interact(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) {
-    auto[closestModel, distance] = rayCast(interactables, colliders);
+    auto [closestModel, distance] = rayCast(interactables, colliders);
 
     if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
         closestModel->onInteract(position, distance);
@@ -193,14 +190,16 @@ void Camera::interact(const std::vector<Interactable *> &interactables, const st
 }
 
 void Camera::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
-    bool isMoving = velocity.x > 0 || velocity.z > 0;
-
     Entity::doPhysics(deltaTime, colliders);
     updateCameraVectors();
 
+    if (!hasGravity) {
+        velocity = glm::vec3(0.0f);
+    }
+
     if (onGround) {
         if (wasOnGround) {
-            if (isMoving && (walkSound == nullptr || !walkSound->isPlaying())) {
+            if (didMove && (walkSound == nullptr || !walkSound->isPlaying())) {
                 delete walkSound;
                 walkSound = new Sound(Sound::getRandomSound("walk/gravel.ogg", 4), position, 0.2f);
                 walkSound->play();
@@ -211,6 +210,7 @@ void Camera::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &collid
         }
     }
 
+    didMove = false;
 }
 
 void Camera::setPosition(glm::vec3 position) {
@@ -219,9 +219,20 @@ void Camera::setPosition(glm::vec3 position) {
 }
 
 void Camera::attack(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) {
-    auto[closestModel, distance] = rayCast(interactables, colliders);
+    auto [closestModel, distance] = rayCast(interactables, colliders);
 
     if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
         closestModel->onAttack(position, distance);
     }
+}
+
+void Camera::onAttack() {
+    lastHitTime = glfwGetTime();
+
+    Sound sound = Sound(Sound::getRandomSound("hit/hit.ogg", 3), position);
+    sound.play();
+}
+
+bool Camera::wasHit() const {
+    return glfwGetTime() - lastHitTime < ATTACK_DELAY;
 }

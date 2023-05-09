@@ -64,20 +64,16 @@ void Scene::setupMaze() {
             PositionEnum position = mazeParser->getMaze()[i][j];
 
             if (position == PositionEnum::LIGHT) {
-                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.125f, j + 0.5f)),glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+                glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.125f, j + 0.5f)),
+                                                 glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 torchMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
-                addEntity(new Ghost(glm::vec3(i + 0.1f, 0.8f, j + 0.1f)));
+                addEntity(new Ghost(glm::vec3(i + 0.5f, 0.8f, j + 0.5f)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::GHOST) {
-                addEntity(new Ghost(glm::vec3(i + 0.1f, 0.8f, j + 0.1f)));
+                addEntity(new Ghost(glm::vec3(i + 0.5f, 0.8f, j + 0.5f)));
             } else if (position == PositionEnum::OBSTACLE) {
-                // needs to be an instance, since when the model is removed from the scene, it will be deleted
-                auto obstacleMesh = modelLoader->loadMeshes("objects/obstacle/obstacle.obj");
-                auto model = new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j)),
-                                          new Shader("shaders/singular.vs", "shaders/lighting.fs"),
-                                          obstacleMesh);
-                addObject(model);
+                addObject(new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j))));
             }
 
             floorMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
@@ -184,4 +180,20 @@ std::vector<Interactable *> Scene::getInteractables() {
     }
 
     return interactables;
+}
+
+std::vector<Ghost *> Scene::getGhosts() {
+    std::vector<Ghost *> ghosts = {};
+
+    for (Entity *entity: entities) {
+        if (auto ghost = dynamic_cast<Ghost *>(entity)) {
+            if (!ghost->isAlive()) {
+                continue;
+            }
+
+            ghosts.push_back(ghost);
+        }
+    }
+
+    return ghosts;
 }

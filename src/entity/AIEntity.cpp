@@ -1,7 +1,7 @@
 #include "AIEntity.h"
 #include "glm/ext/matrix_transform.hpp"
 
-#define SPEED 1.0f
+#define SPEED 0.02f
 
 void AIEntity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &colliders) {
     if (!path.empty()) {
@@ -9,15 +9,15 @@ void AIEntity::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &coll
         glm::vec2 target = glm::vec2(top.x + 0.5f, top.y + 0.5f);
         glm::vec2 current = glm::vec2(position.x, position.z);
 
-        if(glm::distance(target, current) < 0.1f) {
+        if (glm::distance(target, current) < 0.1f) {
             path.pop();
         } else {
             glm::vec2 direction = glm::normalize(target - current);
-            velocity.x = direction.x * SPEED;
-            velocity.z = direction.y * SPEED;
+            position.x += direction.x * SPEED;
+            position.z += direction.y * SPEED;
 
             float correctYaw = glm::degrees(atan2(direction.x, direction.y));
-            yaw += (correctYaw - yaw) * 0.1f;
+            yaw = fmod(yaw + (correctYaw - yaw) * 0.1f, 360.0f);
         }
     }
 
