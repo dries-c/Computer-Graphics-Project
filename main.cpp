@@ -28,7 +28,7 @@ int main() {
 
         double currentTime = glfwGetTime();
         deltaTime = currentTime - lastTime;
-        std::cout << "FPS: " << 1.0 / deltaTime << std::endl;
+        std::cout << "FPS: " << round(1.0 / deltaTime) << std::endl;
 
         lastTime = currentTime;
 
