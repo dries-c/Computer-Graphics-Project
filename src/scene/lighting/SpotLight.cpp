@@ -1,8 +1,8 @@
 #include "SpotLight.h"
 #include <stdexcept>
 
-SpotLight::SpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular,
-                     float cutOff, float outerCutOff, float constant, float linear, float quadratic) : LightSource(ambient, diffuse, specular),
+SpotLight::SpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 color,
+                     float cutOff, float outerCutOff, float constant, float linear, float quadratic) : LightSource(ambient, diffuse, specular, color),
                                                                                                       position(position),
                                                                                                       direction(direction),
                                                                                                       cutOff(cutOff),
@@ -11,8 +11,8 @@ SpotLight::SpotLight(glm::vec3 position, glm::vec3 direction, glm::vec3 ambient,
                                                                                                       linear(linear),
                                                                                                       quadratic(quadratic) {}
 
-SpotLight::SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, float cutOff, float outerCutOff,
-                     float constant, float linear, float quadratic) : LightSource(ambient, diffuse, specular),
+SpotLight::SpotLight(glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 color, float cutOff, float outerCutOff,
+                     float constant, float linear, float quadratic) : LightSource(ambient, diffuse, specular, color),
                                                                        cutOff(cutOff),
                                                                        outerCutOff(outerCutOff),
                                                                        constant(constant),

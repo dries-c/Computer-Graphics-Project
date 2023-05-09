@@ -9,7 +9,7 @@ private:
     glm::vec3 direction;
 
 public:
-    DirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular);
+    DirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse, glm::vec3 specular, glm::vec3 color);
 
     void bind(Shader *shader, int index);
 };

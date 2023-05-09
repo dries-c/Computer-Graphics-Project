@@ -99,9 +99,9 @@ GLFWwindow *createWindow(int width, int height, const char *title) {
     glfwSetMouseButtonCallback(window, [](GLFWwindow *window, int button, int action, int mods) {
         if (action == GLFW_PRESS) {
             if (button == GLFW_MOUSE_BUTTON_LEFT) {
-                Camera::getInstance()->attack(scene->getInteractables());
+                Camera::getInstance()->attack(scene->getInteractables(), scene->getBoundingBoxes());
             } else if (button == GLFW_MOUSE_BUTTON_RIGHT) {
-                Camera::getInstance()->interact(scene->getInteractables());
+                Camera::getInstance()->interact(scene->getInteractables(), scene->getBoundingBoxes());
             }
         }
     });

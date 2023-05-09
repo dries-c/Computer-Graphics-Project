@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 DirectionalLight::DirectionalLight(glm::vec3 direction, glm::vec3 ambient, glm::vec3 diffuse,
-                                   glm::vec3 specular) : LightSource(ambient, diffuse, specular),
+                                   glm::vec3 specular, glm::vec3 color) : LightSource(ambient, diffuse, specular, color),
                                                                      direction(direction) {}
 
 void DirectionalLight::bind(Shader *shader, int index) {

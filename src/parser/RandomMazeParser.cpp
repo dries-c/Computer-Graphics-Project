@@ -252,5 +252,4 @@ RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) 
     placeLights();
     saveMazeToFile(fileName);
     PrintMaze();
-
 }

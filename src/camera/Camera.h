@@ -38,7 +38,7 @@ private:
     float fov;
 
     void updateCameraVectors();
-    Interactable* rayCast(const std::vector<Interactable *> &interactables);
+    [[nodiscard]] std::pair<Interactable*, float> rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const;
 public:
     Camera(Camera &other) = delete;
 
@@ -66,9 +66,9 @@ public:
 
     void setWindowDimensions(int width, int height);
 
-    void interact(const std::vector<Interactable *> &interactables);
+    void interact(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders);
 
-    void attack(const std::vector<Interactable *> &interactables);
+    void attack(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders);
 };
 
 #endif

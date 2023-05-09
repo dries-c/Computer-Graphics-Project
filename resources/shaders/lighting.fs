@@ -7,6 +7,7 @@ struct Material {
 };
 
 struct LightSource {
+    vec3 color;
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
@@ -55,6 +56,7 @@ uniform PointLight[MAX_SIZE] pointLights;
 uniform SpotLight spotLight;
 uniform bool spotLightEnabled;
 uniform Material material;
+uniform bool hit;
 
 vec3 applyDirectionalLight(vec3 viewDir);
 vec3 applyPointLights(PointLight light, vec3 viewDir);
@@ -74,6 +76,10 @@ void main()
         result += applyPointLights(pointLights[i], viewDir);
     }
 
+    if(hit) {
+        result *= vec3(1.0f, 0.5f, 0.5f);
+    }
+
 	FragColor = vec4(result, 1.0);
 }
 
@@ -88,7 +94,7 @@ vec3 apply(LightSource light, vec3 lightDir, vec3 viewDir)
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 specular = light.specular * spec * vec3(texture(material.specular, TexCoord));
 
-    return (ambient + diffuse + specular);
+    return (ambient + diffuse + specular) * light.color;
 }
 
 vec3 applyDirectionalLight(vec3 viewDir)

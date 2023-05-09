@@ -38,11 +38,10 @@ AxisAlignedBB Entity::getBoundingBox() const {
     return boundingBox.offset(position);
 }
 
-Entity::Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch, int health) : position(position),
+Entity::Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch) : position(position),
                                                                                         boundingBox(boundingBox),
                                                                                         yaw(yaw),
-                                                                                        pitch(pitch),
-                                                                                        health(health){}
+                                                                                        pitch(pitch){}
 
 glm::vec3 Entity::getPosition() const {
     return position;
@@ -108,22 +107,6 @@ glm::mat4 Entity::getModelMatrix() const {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(pitch), glm::vec3(1.0f, 0.0f, 0.0f));
 
     return modelMatrix;
-}
-
-
-void Entity::onAttack() {
-    health--;
-    Sound sound = Sound("hit.ogg");
-    sound.play();
-    if (health <= 0) {
-        kill();
-        std::cout << "Entity died" << std::endl;
-    }
-    std::cout << "Entity attacked" << std::endl;
-}
-
-void Entity::onInteract() {
-    std::cout << "Entity interacted" << std::endl;
 }
 
 std::vector<AxisAlignedBB> Entity::getBoundingBoxes() const {

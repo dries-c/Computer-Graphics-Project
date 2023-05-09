@@ -10,12 +10,14 @@ Lighting::Lighting() {
             glm::vec3(1.0f, 0.5f, 1.0f),
             glm::vec3(0.0f),
             glm::vec3(0.0f),
-            glm::vec3(0.0f)
+            glm::vec3(0.0f),
+            glm::vec3(1.0f)
     );
     spotLightSource = new SpotLight(
             glm::vec3(0.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
             glm::vec3(1.0f, 1.0f, 1.0f),
+            Lighting::rgbToVec3(255, 214, 170),
             cos(12.5f * M_PI / 180.0f),
             cos(25.0f * M_PI / 180.0f),
             1.0f,
@@ -64,4 +66,12 @@ Lighting *Lighting::getInstance() {
     }
 
     return instance;
+}
+
+glm::vec3 Lighting::rgbToVec3(int r, int g, int b) {
+    return {
+            std::clamp((float) r / 255.0f, 0.0f, 1.0f),
+            std::clamp((float) g / 255.0f, 0.0f, 1.0f),
+            std::clamp((float) b / 255.0f, 0.0f, 1.0f)
+    };
 }

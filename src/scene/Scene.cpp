@@ -6,6 +6,7 @@
 #include "model/Obstacle.h"
 #include "GLFW/glfw3.h"
 #include "../entity/AIEntity.h"
+#include "../entity/Ghost.h"
 #include <iostream>
 
 #define PATH_FINDING_INTERVAL 0.5f
@@ -46,15 +47,7 @@ Scene::Scene() {
 }
 
 void Scene::setupEntities() {
-    ModelLoader *modelLoader = ModelLoader::getInstance();
-    auto *aiEntity = new AIEntity(glm::vec3(0.1f, 0.8f, 0.1f),
-                                  AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)), 0.0f,
-                                  0.0f);
-    std::vector<Mesh *> meshes = modelLoader->loadMeshes("objects/ghost/ghost.obj");
-
-    auto *aiModel = new Model(glm::rotate(glm::mat4(0.0f), glm::radians(180.0f), glm::vec3(0, 1, 0)), new Shader("shaders/singular.vs", "shaders/lighting.fs"), meshes);
-    aiEntity->setModel(aiModel);
-    addEntity(aiEntity);
+    addEntity(new Ghost(glm::vec3(0.1f, 0.8f, 0.1f)));
 }
 
 void Scene::setupMaze() {
@@ -101,6 +94,7 @@ void Scene::setupMaze() {
             glm::vec3(0.01f, 0.01f, 0.01f),
             glm::vec3(0.5f, 0.5f, 0.5f),
             glm::vec3(0.10f, 0.10f, 0.10f),
+            Lighting::rgbToVec3(255, 197, 143),
             0.1f,
             0.09f,
             0.032f
@@ -109,6 +103,9 @@ void Scene::setupMaze() {
 
     Sound sound = Sound("startup.ogg");
     sound.play();
+
+    Sound ambient = Sound("ambience.ogg", 1.8f, true);
+    ambient.play();
 }
 
 Scene::~Scene() {

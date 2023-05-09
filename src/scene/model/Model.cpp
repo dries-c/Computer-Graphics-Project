@@ -1,5 +1,8 @@
 #include "Model.h"
+#include "GLFW/glfw3.h"
 #include <iostream>
+
+#define HIT_TIME 0.2
 
 void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatrix) {
     shader->bind();
@@ -13,6 +16,8 @@ void Model::render(const glm::mat4 &viewMatrix, const glm::mat4 &projectionMatri
 
     shader->setMat4("view", viewMatrix);
     shader->setMat4("projection", projectionMatrix);
+
+    shader->setBool("hit", isHit());
 
     for (Mesh *mesh: meshes) {
         mesh->render(*shader);
@@ -104,4 +109,12 @@ void Model::setLightSource(const PointLight &source) {
 
         lightSources.push_back(clonedSource);
     }
+}
+
+bool Model::isHit() const {
+    return lastHitTime + HIT_TIME > glfwGetTime();
+}
+
+void Model::onHit() {
+    lastHitTime = glfwGetTime();
 }

@@ -27,6 +27,7 @@ public:
     void updateCameraPosition(glm::vec3 pos, glm::vec3 direction);
     void bind(Shader *shader) const;
     static Lighting *getInstance();
+    static glm::vec3 rgbToVec3(int r, int g, int b);
     void toggleSpotlight();
 };
 

@@ -10,6 +10,7 @@
 class Model {
 private:
     void setupInstancing();
+    bool isHit() const;
 
 protected:
     std::vector<Mesh *> meshes;
@@ -18,6 +19,7 @@ protected:
     std::vector<PointLight *> lightSources;
     unsigned int buffer{};
     bool collision;
+    double lastHitTime = 0;
 
 public:
     virtual ~Model();
@@ -37,6 +39,8 @@ public:
     [[nodiscard]] bool isInstanced() const;
 
     void setModelMatrix(const glm::mat4 &modelMatrix);
+
+    void onHit();
 };
 
 

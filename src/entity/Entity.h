@@ -9,7 +9,7 @@
 #define GRAVITY 9.81f
 #define JUMP_SPEED 3.0f
 
-class Entity : public Interactable {
+class Entity {
 protected:
     glm::vec3 position{};
     glm::vec3 oldPosition{};
@@ -20,11 +20,10 @@ protected:
     bool wasOnGround = false;
     bool hasGravity = false;
     Model *model = nullptr;
-    int health;
     float yaw;
     float pitch;
 public:
-    explicit Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch, int health = 10);
+    explicit Entity(glm::vec3 position, AxisAlignedBB boundingBox, float yaw, float pitch);
 
     void setModel(Model *model);
 
@@ -46,10 +45,8 @@ public:
 
     void onCollision(const AxisAlignedBB &collider);
 
-    void onAttack() override;
-    void onInteract() override;
-    std::vector<AxisAlignedBB> getBoundingBoxes() const override;
-    glm::mat4 getModelMatrix() const override;
+    [[nodiscard]] std::vector<AxisAlignedBB> getBoundingBoxes() const;
+    [[nodiscard]] glm::mat4 getModelMatrix() const;
 };
 
 

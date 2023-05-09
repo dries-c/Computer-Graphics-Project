@@ -8,3 +8,7 @@ std::vector<AxisAlignedBB> InteractableModel::getBoundingBoxes() const {
 glm::mat4 InteractableModel::getModelMatrix() const {
     return Model::getModelMatrices()[0];
 }
+
+glm::vec3 InteractableModel::getPosition() const {
+    return {getModelMatrix()[3]};
+}

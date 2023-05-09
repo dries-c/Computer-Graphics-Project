@@ -1,12 +1,13 @@
 #include "Obstacle.h"
 #include "../../sound/Sound.h"
 
-void Obstacle::onAttack() {
+void Obstacle::onAttack(float distance) {
     // do nothing
 }
 
-void Obstacle::onInteract() {
+void Obstacle::onInteract(float distance) {
     kill();
-    Sound sound = Sound("break.ogg");
+
+    Sound sound = Sound(Sound::getRandomSound("obstacle/dig.ogg", 4), getPosition());
     sound.play();
 }

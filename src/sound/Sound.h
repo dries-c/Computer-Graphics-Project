@@ -28,6 +28,8 @@ public:
     void setVolume(float volume);
     void stop();
     void play();
+
+    static std::string getRandomSound(std::string path, int amount);
 };
 
 

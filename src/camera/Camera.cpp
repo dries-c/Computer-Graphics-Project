@@ -152,14 +152,14 @@ void Camera::setWindowDimensions(int width, int height) {
     this->height = height;
 }
 
-Interactable *Camera::rayCast(const std::vector<Interactable *> &interactables) {
+std::pair<Interactable*, float> Camera::rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const {
     float closestDistance = FLT_MAX;
     Interactable *closestInteractable = nullptr;
 
     for (const auto interactable: interactables) {
         for (const auto &bb: interactable->getBoundingBoxes()) {
             float distance = bb.getIntersectionDistance(position, front);
-            if (distance == -1) {
+            if (distance < 0) {
                 continue;// No intersection
             }
 
@@ -170,14 +170,30 @@ Interactable *Camera::rayCast(const std::vector<Interactable *> &interactables) 
         }
     }
 
-    return closestInteractable;
+    for (const auto &bb: colliders) {
+        float distance = bb.getIntersectionDistance(position, front);
+        if (distance < 0) {
+            continue;// No intersection
+        }
+
+        if (distance < closestDistance) {
+            std::cout << "Hit collider" << bb.min.x << ", " << bb.min.y << ", " << bb.min.z << std::endl;
+            return {nullptr, -1}; // We hit a collider, so we can't interact with anything
+        }
+    }
+
+    return {closestInteractable, closestDistance};
 }
 
-void Camera::interact(const std::vector<Interactable *> &interactables) {
-    auto closestModel = rayCast(interactables);
+void Camera::interact(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) {
+    auto[closestModel, distance] = rayCast(interactables, colliders);
 
-    if (closestModel != nullptr) {
-        closestModel->onInteract();
+    if(closestModel != nullptr){
+        std::cout << "Distance: " << distance << std::endl;
+    }
+
+    if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
+        closestModel->onInteract(distance);
     }
 }
 
@@ -191,11 +207,11 @@ void Camera::doPhysics(float deltaTime, const std::vector<AxisAlignedBB> &collid
         if (wasOnGround) {
             if (isMoving && (walkSound == nullptr || !walkSound->isPlaying())) {
                 delete walkSound;
-                walkSound = new Sound("walk/grass" + std::to_string(rand() % 6 + 1) + ".ogg");
+                walkSound = new Sound(Sound::getRandomSound("walk/gravel.ogg", 4), position, 0.2f);
                 walkSound->play();
             }
         } else {
-            Sound sound = Sound("fall.ogg");
+            Sound sound = Sound("fall.ogg", position, 0.5f);
             sound.play();
         }
     }
@@ -207,10 +223,10 @@ void Camera::setPosition(glm::vec3 position) {
     updateCameraVectors();
 }
 
-void Camera::attack(const std::vector<Interactable *> &interactables) {
-    auto closestModel = rayCast(interactables);
+void Camera::attack(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) {
+    auto[closestModel, distance] = rayCast(interactables, colliders);
 
-    if (closestModel != nullptr) {
-        closestModel->onAttack();
+    if (closestModel != nullptr && distance < MAX_INTERACT_DISTANCE) {
+        closestModel->onAttack(distance);
     }
 }
