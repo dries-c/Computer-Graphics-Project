@@ -1,6 +1,6 @@
 # Blender v3.5.1 OBJ File: ''
 # www.blender.org
-mtllib ghost.mtl
+mtllib cyan_ghost.mtl
 o Sphere.001
 v 0.330000 -0.000000 0.000000
 v 0.304880 0.126285 0.000000
