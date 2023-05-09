@@ -33,7 +33,6 @@ private:
     void addEntity(Entity *entity);
     void setupMaze();
     void setupSkybox();
-    void setupEntities();
 };
 
 #endif

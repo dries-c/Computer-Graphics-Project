@@ -44,11 +44,6 @@ void Scene::addObject(Model *object) {
 Scene::Scene() {
     setupSkybox();
     setupMaze();
-    setupEntities();
-}
-
-void Scene::setupEntities() {
-
 }
 
 void Scene::setupMaze() {
@@ -71,6 +66,7 @@ void Scene::setupMaze() {
             if (position == PositionEnum::LIGHT) {
                 glm::mat4 torchPos = glm::rotate(glm::translate(base, glm::vec3(i + 0.5f, 0.125f, j + 0.5f)),glm::radians(180.0f), glm::vec3(1.0f, 0.0f, 0.0f));
                 torchMatrices.push_back(glm::scale(torchPos, glm::vec3(0.3f, 0.3f, 0.3f)));
+                addEntity(new Ghost(glm::vec3(i + 0.1f, 0.8f, j + 0.1f)));
             } else if (position == PositionEnum::WALL) {
                 wallMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));
             } else if (position == PositionEnum::GHOST) {
