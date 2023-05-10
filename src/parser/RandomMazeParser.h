@@ -12,16 +12,15 @@ private:
     int width;
 
 
-    void ResetMaze();
-    int XYToIndex(int x, int y);
+    void resetMaze();
     int IsInBounds(int x, int y);
     void goToSpace(int x, int y);
     void PrintMaze();
     void saveMazeToFile(const char *filename);
-    void createEntranceAndExit();
+    void createExit();
     void checkHeightAndWidth(int height, int width);
     void placeLights();
-    void fileMazeParser( const char* filename);
+    void placeGhosts();
 
 
 public:
