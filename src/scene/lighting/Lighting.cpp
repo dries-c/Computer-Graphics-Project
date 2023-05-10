@@ -9,11 +9,11 @@ Lighting *Lighting::instance = nullptr;
 
 Lighting::Lighting() {
     directionalLightSource = new DirectionalLight(
-            glm::vec3(1.0f, 0.5f, 1.0f),
+            glm::vec3(-0.5f, -1.0f, -0.5f),
             glm::vec3(0.0f),
-            glm::vec3(0.0f),
-            glm::vec3(0.0f),
-            glm::vec3(1.0f)
+            glm::vec3(0.05f),
+            glm::vec3(0.1f),
+            rgbToVec3(255, 209, 178) // sodium vapor
     );
     spotLightSource = new SpotLight(
             glm::vec3(0.0f),

@@ -91,9 +91,8 @@ void Scene::setupMaze() {
     Sound sound = Sound("startup.ogg");
     sound.play();
 
-    Sound ambient = Sound("ambience.ogg", 1.8f, true);
+    Sound ambient = Sound("ambience.ogg", 4.0f, true);
     ambient.play();
-
 }
 
 Scene::~Scene() {

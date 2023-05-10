@@ -7,14 +7,14 @@
 void setupGlfw();
 void bindGlad();
 void processInput(Camera *camera, GLFWwindow *window, Lighting *lighting);
-void processAttacks(Camera *camera, std::vector<Ghost *> aiEntities);
-GLFWwindow *createWindow(int width, int xPos, const char *yPos);
+void processAttacks(Camera *camera, std::vector<Ghost *> ghosts);
+GLFWwindow *createWindow(const char *title);
 
 static Scene* scene;
 
 int main() {
     setupGlfw();
-    auto window = createWindow(800, 600, "OpenGL Project");
+    auto window = createWindow("Maze");
 
     scene = new Scene();
 
@@ -98,14 +98,16 @@ void bindGlad() {
     }
 }
 
-GLFWwindow *createWindow(int width, int height, const char *title) {
-    GLFWwindow *window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+GLFWwindow *createWindow(const char *title) {
+    const auto monitor = glfwGetPrimaryMonitor();
+    const auto mode = glfwGetVideoMode(monitor);
+    GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, title, monitor, nullptr);
     if (window == nullptr) {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
-    Camera::getInstance()->setWindowDimensions(width, height);
+    Camera::getInstance()->setWindowDimensions(mode->width, mode->height);
 
     glfwMakeContextCurrent(window);
 
