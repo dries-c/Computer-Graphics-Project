@@ -8,6 +8,9 @@ void Obstacle::onAttack(glm::vec3 position, float distance) {
 void Obstacle::onInteract(glm::vec3 position, float distance) {
     kill();
 
-    Sound sound = Sound(Sound::getRandomSound("obstacle/dig.ogg", 4), getPosition());
+    auto pos = getPosition();
+    Sound sound = Sound(Sound::getRandomSound("obstacle/dig.ogg", 4), pos);
     sound.play();
+
+    pathfindingAlgorithm.removeObstacle({pos.x, pos.z});
 }

@@ -36,7 +36,7 @@ void Ghost::onInteract(glm::vec3 position, float distance) {
 }
 
 Ghost::Ghost(glm::vec3 position) : AIEntity(position,
-                                            AxisAlignedBB(glm::vec3(-0.1f, -0.8f, -0.1f), glm::vec3(0.1f, 0.8f, 0.1f)),
+                                            AxisAlignedBB(glm::vec3(-0.3f, -0.8f, -0.3f), glm::vec3(0.3f, 0.8f, 0.3f)),
                                             0.0f, 0.0f), health(10) {
     ModelLoader *modelLoader = ModelLoader::getInstance();
     //generate random number between 1 and 6

@@ -27,7 +27,7 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
     // Displays the finished maze to the screen.
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
-            switch(maze[x][y]){
+            switch (maze[x][y]) {
                 case PositionEnum::WALL:
                     myfile << "#";
                     break;
@@ -40,6 +40,8 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
                 case PositionEnum::LIGHT:
                     myfile << "L";
                     break;
+                case PositionEnum::GHOST:
+                    myfile << "G";
             }
         }
         myfile << endl;

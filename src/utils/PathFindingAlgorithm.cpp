@@ -111,3 +111,7 @@ int PathFindingAlgorithm::getIndex(const std::vector<Node *> &list, const glm::v
 
     return it - list.begin();
 }
+
+void PathFindingAlgorithm::removeObstacle(const glm::vec2 &position) {
+    walkableMaze[(int) position.x][(int) position.y] = true;
+}

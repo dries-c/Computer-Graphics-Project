@@ -77,7 +77,7 @@ void Scene::setupMaze() {
             } else if (position == PositionEnum::GHOST) {
                 addEntity(new Ghost(glm::vec3(i + 0.5f, 0.8f, j + 0.5f)));
             } else if (position == PositionEnum::OBSTACLE) {
-                addObject(new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j))));
+                addObject(new Obstacle(glm::translate(base, glm::vec3(i, 0.0f, j)), *pathFinding));
             }
 
             floorMatrices.push_back(glm::translate(base, glm::vec3(i, 0.0f, j)));

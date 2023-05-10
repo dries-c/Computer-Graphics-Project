@@ -28,6 +28,8 @@ private:
 public:
     explicit PathFindingAlgorithm(std::vector<std::vector<bool>> walkableMaze);
     std::stack<glm::vec2> getPath(const glm::vec2& start, const glm::vec2& target);
+
+    void removeObstacle(const glm::vec2& position);
 };
 
 
