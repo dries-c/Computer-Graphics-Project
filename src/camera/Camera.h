@@ -39,6 +39,7 @@ private:
     float fov;
 
     double lastHitTime = 0.0f;
+    int health = 10;
 
     void updateCameraVectors();
     [[nodiscard]] std::pair<Interactable*, float> rayCast(const std::vector<Interactable *> &interactables, const std::vector<AxisAlignedBB> &colliders) const;

@@ -231,6 +231,18 @@ void Camera::onAttack() {
 
     Sound sound = Sound(Sound::getRandomSound("hit/hit.ogg", 3), position);
     sound.play();
+
+    health--;
+    if (health <= 0) {
+        Sound sound = Sound("hit/death.ogg", position);
+        sound.play();
+
+        while (sound.isPlaying()) {
+            // do nothing
+        }
+
+        exit(EXIT_SUCCESS);
+    }
 }
 
 bool Camera::wasHit() const {
