@@ -48,11 +48,8 @@ void RandomMazeParser::saveMazeToFile(const char *filename) {
 
 }
 
-void RandomMazeParser::createEntranceAndExit() {
+void RandomMazeParser::createExit() {
     // Create an entrance and exit.
-    //maze[0][1] = PositionEnum::EMPTY;
-    //maze[0][0] = PositionEnum::EMPTY;
-    //maze[1][0] = PositionEnum::EMPTY;
     maze[width - 1][height - 2] = PositionEnum::EMPTY;
     maze[width - 2][height - 1] = PositionEnum::EMPTY;
     maze[width - 1][height - 1] = PositionEnum::EMPTY;
@@ -114,7 +111,7 @@ void RandomMazeParser::placeObstacles() {
 }
 
 
-void RandomMazeParser::ResetMaze() {
+void RandomMazeParser::resetMaze() {
 
 
     //make maze 2d vector of chars with height and width
@@ -133,28 +130,24 @@ int RandomMazeParser::IsInBounds(int x, int y) {
 
 // This is the recursive function we will code in the next project
 void RandomMazeParser::goToSpace(int x, int y) {
-    // Starting at the given index, recursively visits every direction in a
-    // randomized order.
-    // Set my current location to be an empty passage.
+
     maze[x][y] = PositionEnum::EMPTY;;
-    // Create an local array containing the 4 directions and shuffle their order.
     int dirs[4];
     dirs[0] = NORTH;
     dirs[1] = EAST;
     dirs[2] = SOUTH;
     dirs[3] = WEST;
-    for (int i = 0; i < 4; ++i) {
+    for (int & dir : dirs) {
         int r = rand() & 3;
         int temp = dirs[r];
-        dirs[r] = dirs[i];
-        dirs[i] = temp;
+        dirs[r] = dir;
+        dir = temp;
     }
-    // Loop through every direction and attempt to goToSpace that direction.
-    for (int i = 0; i < 4; ++i) {
+    for (int dir : dirs) {
         // dx,dy are offsets from current location. Set them based
         // on the next direction I wish to try.
         int dx = 0, dy = 0;
-        switch (dirs[i]) {
+        switch (dir) {
             case NORTH:
                 dy = -1;
                 break;
@@ -201,7 +194,9 @@ void RandomMazeParser::PrintMaze() {
                 case PositionEnum::LIGHT:
                     cout << "L";
                     break;
-
+                case PositionEnum::GHOST:
+                    cout << "G";
+                    break;
             }
         }
         cout << endl;
@@ -239,19 +234,46 @@ RandomMazeParser::RandomMazeParser(int height, int width, const char *fileName) 
     this->height = height;
     this->width = width;
 
-    vector<PositionEnum> row(width, PositionEnum::WALL);
-    for (int i = 0; i < height; i++) {
-        maze.push_back(row);
-    }
-
-    // Starting point and top-level control.
-
+    resetMaze();
     srand(time(0)); // seed random number generator.
-    //ResetMaze();
     goToSpace(1, 1);
     placeObstacles();
-    createEntranceAndExit();
+    createExit();
     placeLights();
+    placeGhosts();
     saveMazeToFile(fileName);
     PrintMaze();
+}
+
+void RandomMazeParser::placeGhosts() {
+    //place a ghost on all the tiles that are next to a light
+    for (int i = 0; i < height; i++) {
+        for (int j = 0; j < width; ++j) {
+            if (maze[i][j] == PositionEnum::LIGHT) {
+                if (maze[i - 1][j] == PositionEnum::EMPTY) {
+                    maze[i - 1][j] = PositionEnum::GHOST;
+                }
+                else if (maze[i + 1][j] == PositionEnum::EMPTY) {
+                    maze[i + 1][j] = PositionEnum::GHOST;
+                }
+                else if (maze[i][j - 1] == PositionEnum::EMPTY) {
+                    maze[i][j - 1] = PositionEnum::GHOST;
+                }
+                else if (maze[i][j + 1] == PositionEnum::EMPTY) {
+                    maze[i][j + 1] = PositionEnum::GHOST;
+                }
+            }
+        }
+    }
+    //if (1,2),(2,2) or (2,1) are ghosttiles replace it for an empty tile
+    if (maze[1][2] == PositionEnum::GHOST) {
+        maze[1][2] = PositionEnum::EMPTY;
+    }
+    if (maze[2][1] == PositionEnum::GHOST) {
+        maze[2][1] = PositionEnum::EMPTY;
+    }
+    
+
+
+
 }
